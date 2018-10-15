@@ -1,0 +1,9 @@
+# Specifies intentionally untracked files to ignore when using Git
+# http://git-scm.com/docs/gitignore
+
+*~
+*.sw[mnpcod]
+OMG/conf/*.ini
+OMG/log/omg.log
+OMG/View/rutasArchivos.php
+nbproject/private/private.xml

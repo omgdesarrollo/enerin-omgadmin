@@ -1,0 +1,148 @@
+
+body{
+    font-size: 12px;
+    background-color: #00c4ff26;
+    
+
+}
+
+#Contenedor{
+    width: 400px;
+    margin: 50px auto;
+    border: 2px solid #5cb85c;
+    height: 400px;
+    padding: 0px 9px 0px 9px;
+        
+    -webkit-box-shadow: 0px 7px 10px 5px rgba(119,119,119,0.5);
+    -moz-box-shadow: 0px 7px 10px 5px rgba(119,119,119,0.5);
+    box-shadow: 0px 7px 10px 5px rgba(119,119,119,0.5);
+    
+    
+    /*para el efecto del border*/
+    border-radius: 10px 10px 10px 10px;
+    -moz-border-radius: 10px 10px 10px 10px;
+    -webkit-border-radius: 10px 10px 10px 10px;
+    border: 0px solid #000000;
+    /*termina el efecto del border*/
+    
+/*    -moz-box-shadow: 0 0 5px #888;
+-webkit-box-shadow: 0 0 5px#888;
+box-shadow: 0 0 5px #888;*/
+}
+
+
+p{
+  animation-duration: 3s;
+  animation-name: slidein;
+  animation-iteration-count: infinite;
+}
+
+
+.rombo {
+    width: 100px; 
+    height: 100px; 
+    border: 3px solid #337ab7; 
+    background: #00c4ff26;
+    margin-top: 100px;
+    color: #fff;
+    position: absolute;
+
+    -webkit-transform: rotate(45deg) skew(15deg, 15deg);
+    -moz-transform: rotate(45deg) skew(15deg, 15deg);
+    -ms-transform: rotate(45deg) skew(15deg, 15deg);
+    -o-transform: rotate(45deg) skew(15deg, 15deg);
+    transform: rotate(45deg) skew(15deg, 15deg);
+}
+
+.cuadrado {
+    width: 100px; 
+    height: 100px; 
+    border: 3px solid #337ab7;
+    background: #428bca;
+    margin-top: 250px;
+    position: absolute;
+}
+
+.oval {
+    width: 250px;
+    height: 100px;
+    -moz-border-radius: 0 50% / 0 100%;
+    -webkit-border-radius: 0 50% / 0 100%;
+    border-radius: 0 50% / 0 100%;
+    background: #5cb85c;
+    border: 3px solid #337ab7;
+    margin-top: 370px;
+    position: absolute;
+}
+
+footer {
+    background: #337ab7;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 50px;
+    color: white;
+}
+
+footer .copyright {
+    text-align: center;
+    font-size: 14px;
+    padding: 15px 0px 0px 0px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.Icon span{
+    background: #006699;
+    padding: 20px;
+    border-radius: 120px;
+}
+
+.Icon{
+	margin-top: 10px;
+	margin-bottom:10px; 
+    color: #FFF;
+    font-size: 50px;
+    text-align: center;
+}
+
+.opcioncontra{
+	text-align: center;
+	margin-top: 20px;
+	font-size: 14px;
+}
+
+/**
+ * EN las siguientes lineas
+ * se define el diseño en el que
+ * se mostrara en los dispositivos moviles
+ */
+
+/******************************************/
+/***    DISEÑO PARA MOVILES 320        ****/
+/******************************************/
+@media only screen and (max-width:320px){
+#Contenedor{
+	width: 100%;
+	height: auto;
+	margin: 0px;
+}
+
+/******************************************/
+/***    DISEÑO PARA MOVILES 240        ****/
+/******************************************/
+@media only screen and (max-width:240px){
+	
+}

@@ -1,0 +1,12 @@
+.closeLetra{ color: white;font-size: 30px;  }
+.modal-header{ height:50px;background-color:#444;color:#ddd;}
+
+.sizeChart{width:70%};
+
+/*.modal{overflow: hidden; height: fit-content; padding: 0px 300px 0px 300px ;}*/
+/* .modal-header{ height:50px;background-color:#444;color:#ddd;} */
+/* .modal-dialog{ text-align:-webkit-center;width:-webkit-fill-available;} */
+/* .modal-content{ height:-webkit-fill-available;width:fit-content;} */
+/* .modal-body{ height:-webkit-fill-available; } */
+/*.modal-dialog{ width: -webkit-fill-available; }*/
+/* .modal-dialog{ width: -webkit-fill-available; text-align: -webkit-center;} */

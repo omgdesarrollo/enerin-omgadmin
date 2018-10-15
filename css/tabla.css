@@ -1,0 +1,55 @@
+.header_fijo {
+  width: 96%;
+  table-layout: fixed;
+  border-collapse: collapse;
+}
+.header_fijo thead {
+  background-color: #333;
+  color: #FDFDFD;
+}
+/*.header_fijo thead tr {
+  display: table-row;
+   width: 100%;
+  position: absolute;
+}*/
+.header_fijo tbody {
+  /*display: block;*/
+  /*overflow: auto;*/
+  height: 283px;
+  /*overflow-y: scroll;*/
+  /*overflow: scroll;*/
+  
+  /*position: fixed;*/
+  /*width: 100%;*/
+  /*overflow: auto;*/
+  /*width: 100%;*/
+  /*border: rgba(193, 193, 193, 0.48) 1px solid;*/
+}
+
+
+
+
+
+.table-headert{
+    background-color: #307ECC;
+    color: white;
+}
+.celda{
+    cursor:cell;
+}
+
+.celda-no-editable{
+    cursor:no-drop;
+}
+
+
+
+
+
+
+
+
+
+
+
+
