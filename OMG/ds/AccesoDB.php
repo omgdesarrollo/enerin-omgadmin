@@ -5,12 +5,14 @@ class AccesoDB {
     // Variable que representa la conexion  con el servidor
     private $cn = null;    
     // Implementacion del patrón Singleton
-    private static  $instancia = null;
+    private static $instancia = null;
+    private static $parametros = null;
     
-    public static function getInstancia() {
+    public static function getInstancia($base) {
                
         if( self::$instancia == null ) {
                 self::$instancia = new AccesoDB();
+                self::$parametros = $base;
         }
         return self::$instancia;
     }
@@ -18,11 +20,12 @@ class AccesoDB {
     // Metodo privado que retorna la conexion con el servidor
     private function getConnection() {
         // Datos de conexion
-        $parametros = parse_ini_file("../conf/conexion.ini");
-        $server = $parametros["01"];
-        $user = $parametros["02"];
-        $pass=$parametros["03"];
-        $db=$parametros["04"];
+        // $parametros = parse_ini_file("../conf/conexion.ini");
+        $server = self::$parametros["server"];
+        $user = self::$parametros["user"];
+        $pass = self::$parametros["pass"];
+        $db = self::$parametros["db"];
+
         if($this->cn == null) {
             try {
                 $this->cn = mysqli_connect($server,$user,$pass,$db);
