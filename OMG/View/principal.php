@@ -130,7 +130,7 @@
         </nav>
     </div>
     <ul id="sidenav-left" class="sidenav sidenav-fixed">
-        <li><a href="/pages/admin-dashboard" class="logo-container">Admin<i class="material-icons left">spa</i></a></li>
+        <li><a class="logo-container">ADMINISTRACIÓN<i class="material-icons blue-text">flash_on</i></a></li>
         <li>
             <a class="waves-effect waves-omg flow-text" href="#!"><i class="material-icons blue-text">work</i>Proyectos<i class="material-icons right">send</i></a>
         </li>
