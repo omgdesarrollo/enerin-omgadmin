@@ -105,16 +105,16 @@ if (Session:: existeSesion("usuarioOMG_ADMIN")){
                 <div class="row">
                     <div class="input-field col s12 light-blue-text text-darken-3">
                         <i class="material-icons prefix">person</i>
-                        <input id="usuarioInput" type="text" id="user-input" class="autocomplete light-blue-text text-darken-4">
-                        <label for="user-input">USUARIO</label>
+                        <input id="usuarioInput" type="text" class="autocomplete">
+                        <label for="usuarioInput">USUARIO</label>
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="input-field col s12 light-blue-text text-darken-3">
                         <i class="material-icons prefix ">vpn_key</i>
-                        <input id="contrasenaInput" type="password" id="pass-input" class="autocomplete">
-                        <label for="pass-input">CONTRASEÑA</label>
+                        <input id="contrasenaInput" type="password" class="autocomplete">
+                        <label for="contrasenaInput">CONTRASEÑA</label>
                     </div>
                 </div>
 

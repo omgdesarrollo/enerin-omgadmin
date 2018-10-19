@@ -111,6 +111,19 @@
                 -moz-box-shadow : 0px 11px 30px -5px rgba(0,0,0,0.4);
                 box-shadow : 0px 11px 30px -5px rgba(0,0,0,0.4);
             }
+            .breadcrumb
+            {
+                color: #3399cc !important;
+                text-decoration:underline;
+            }
+            .breadcrumb:before
+            {
+                color: #3399cc !important;
+            }
+            /* a .breadcrumb
+            {
+                text-decoration:underline;
+            } */
             /* .divMenu
             {
                 width:96%;
@@ -135,15 +148,23 @@
         <div class="navbar-fixed">
             <nav class="navbar white">
                 <div class="nav-wrapper">
-                    <a href="#!" class="brand-logo grey-text text-darken-4"><i class="material-icons black-text">account_box</i>
-                    <?php echo Session::getSesion("usuarioOMG_ADMIN")["usuario"]["nombre"]?>
-                </a>
-                    <ul id="nav-mobile" class="right">
-                        <li>
-                            <a id="cerrarSesion" class="waves-effect waves-omg flow-text" href="#!"><i class="material-icons blue-text">exit_to_app</i></a>
-                        </li>
-                    </ul>
-                    <a data-target="sidenav-left" class="sidenav-trigger left"><i class="material-icons black-text">menu</i></a>
+                <!-- <div class="col s10"> -->
+                    <!-- <a href="#!" class="breadcrumb">First</a>
+                    <a href="#!" class="breadcrumb">Second</a>
+                    <a href="#!" class="breadcrumb">Third</a> -->
+                <!-- </div> -->
+                    <!-- <a href="#!" class="brand-logo grey-text text-darken-4"><i class="material-icons black-text">account_box</i> -->
+                    <!-- php -->
+                    <!-- // echo Session::getSesion("usuarioOMG_ADMIN")["usuario"]["nombre"] -->
+                    <!-- // ?> -->
+                <!-- </a> -->
+                        <ul id="nav-mobile" class="right">
+                            <li>
+                                <a id="cerrarSesion" class="waves-effect waves-omg flow-text" href="#!"><i class="material-icons blue-text">exit_to_app</i></a>
+                            </li>
+                        </ul>
+                        <a data-target="sidenav-left" class="sidenav-trigger left"><i class="material-icons black-text">menu</i></a>
+                        <div id="navegacionCrumb"></div>
                 </div>
             </nav>
         </div>
@@ -176,15 +197,17 @@
             </li>
         </ul>
         <div id="divIframe">
-            JA
         </div>
     </body>
     <script>
         // $(document).ready(function(){
         //     $('.tabs').tabs();
         // });
+        var history;
+        console.log(window);
         $(document).ready(function(){
             $('.sidenav').sidenav();
+            $('.modal').modal();
             windowTam = $(window).height();
             $("#divIframe").css("height",(windowTam-70)+"px")
         });
@@ -207,6 +230,9 @@
         cerrarSesion = ()=>
         {
             window.location = "Logout.php";
+            // console.log(window);
         }
+
+        
     </script>
 </html>
