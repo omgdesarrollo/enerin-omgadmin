@@ -14,6 +14,7 @@
         $model = new LoginModel();
 
         $user = $model->validar($usuario,$contrasena);
+        unset($user["usuario"]["contra"]);
         if($user != -1)
             Session::setSesion("usuarioOMG_ADMIN", $user);
         echo json_encode($user);
