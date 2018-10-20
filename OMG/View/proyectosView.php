@@ -125,7 +125,7 @@
             // $('.tooltipped').tooltip();
         //     $('.collapsible').collapsible();
             $('.modal').modal();
-            $('.datepicker').datepicker();
+            $('.datepicker').datepicker({format:"yyyy-mm-dd",defaultDate:new Date(),setDefaultDate:true});
             $('textarea').characterCounter();
         });
 
@@ -134,10 +134,27 @@
 
         $(()=>{
             $("#agregarProyectoInput").on("click",()=>{
-                let nombre = $("#nombreProyectoInput").val();
-                let descripcion = $("#descripcionProyectoInput").val();
-                let fecha = $("#fechaProyectoInput").val();
-                agregarProyecto();
+                let bandera = 1;
+                let mensajeError = "";
+                let datosProyecto = new Object();
+
+                datosProyecto["nombre"] = $("#nombreProyectoInput");
+                datosProyecto["descripcion"] = $("#descripcionProyectoInput");
+                datosProyecto["fecha"] = $("#fechaProyectoInput");
+            
+                $.each(datosProyecto,(index,value)=>{
+                    if(value.val()=="")
+                    {
+                        bandera = 0;
+                        mensajeError += "*"+value[0].labels[0].innerHTML+"\n";
+                    }
+                });
+                bandera==0?
+                    growlError("Campos Requeridos",mensajeError):agregarProyecto(datosProyecto);
+            });
+
+            $("#fechaProyectoInput").on("focus",()=>{
+                $("#fechaProyectoInput").click();
             });
             // $(navegacionCrumb).on("click",()=>{
                 // s
@@ -219,9 +236,37 @@
             $(divIframe).html("<iframe src='proyectoEdicionView.php?data="+data+"'></iframe>");
         }
 
-        agregarProyecto = ()=>
+        agregarProyecto = (data)=>
         {
-            s
+            let dataPost = "{";
+            let bandera = 0;
+            $.each(data,(index,value)=>{
+                if(bandera == 1)
+                {
+                    dataPost += ",";
+                }
+                dataPost += index+":\""+value.val()+"\"";
+                bandera = 1;
+            });
+            console.log(dataPost+"}");
+
+            $.ajax({
+                url: "../Controller/ProyectosController.php?Op=AgregarProyecto",
+                type: "POST",
+                data: dataPost+"}",
+                beforeSend:()=>
+                {
+                    growlWait();
+                },
+                success:(resp)=>
+                {
+                    // if(resp)
+                },
+                error:()=>
+                {
+
+                }
+            });
         }
 
     </script>
