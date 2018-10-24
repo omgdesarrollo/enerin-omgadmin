@@ -56,15 +56,15 @@
             {
                 body.has-fixed-sidenav
                 {
-                    padding-left: 300px;
+                    padding-left: 270px;
                 }
             }
             @media only screen and (min-width: 993px)
             {
                 .has-fixed-sidenav .navbar-fixed nav.navbar
                 {
-                    width: calc(100% - 300px);
-                    left: 300px;
+                    width: calc(100% - 270px);
+                    left: 270px;
                 }
             }
             nav.navbar
@@ -168,7 +168,7 @@
                 </div>
             </nav>
         </div>
-        <ul id="sidenav-left" class="sidenav sidenav-fixed">
+        <ul id="sidenav-left" class="sidenav sidenav-fixed" style="width:270px">
             <li><a class="logo-container" style="margin:8px;text-decoration:none">ADMINISTRACIÓN<i class="material-icons blue-text">flash_on</i></a></li>
             <li><div class="divider"></div></li>
 
@@ -209,7 +209,8 @@
             $('.sidenav').sidenav();
             $('.modal').modal();
             windowTam = $(window).height();
-            $("#divIframe").css("height",(windowTam-70)+"px")
+            // alert(windowTam);
+            $("#divIframe").css("height",(windowTam-70)+"px");
         });
 
         $(()=>{            

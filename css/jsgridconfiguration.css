@@ -1,5 +1,26 @@
-td{overflow: hidden; text-overflow: ellipsis; white-space:nowrap;height:58.5px;}/*para que se vea solo hasta donde alcance del td y lo demas seguido de tres puntos no visualizando a simple vista el contenido solo parte del mismo en caso de no entrar en el td*/
+td{overflow: hidden; text-overflow: ellipsis; white-space:nowrap;height:58.5px;text-align:center}/*para que se vea solo hasta donde alcance del td y lo demas seguido de tres puntos no visualizando a simple vista el contenido solo parte del mismo en caso de no entrar en el td*/
 textarea {display:block;resize:vertical ;box-sizing: padding-box;border-radius:6px;box-shadow:2px 2px 8px rgba(0,0,0,.3);border:0;width: 100%;}
 /*table{table-layout: fixed;}*/
 /*td{word-break:break-all; width:100%}para que se vea todo el contenido a simple vista sin acortar*/
 /* p{overflow: hidden; text-overflow: ellipsis; white-space:nowrap;height:58.5px;} */
+.jsgrid-header-row>.jsgrid-header-cell {
+    background-color:#307ECC; font-family: 'Roboto Slab'; font-size: 1.2em; color: white; font-weight: normal;text-align:center;
+}
+.jsgrid-alt-row >.jsgrid-cell
+{
+    background: #b3ffda;
+    border:1px solid #b3b3b3;
+}
+.jsgrid-cell
+{
+    /* border:1px solid #2b2b2b2e; */
+    border:1px solid #b3b3b3;
+}
+.jsgrid-selected-row>.jsgrid-cell
+{
+    background: #c4e2ff ;
+    border:1px solid #b3b3b3;
+}
+/* .jsgrid-header-row>.jsgrid-header-cell {
+    background-color:#307ECC; font-family: 'Roboto Slab'; font-size: 1.2em; color: white; font-weight: normal;text-align:center;
+} */

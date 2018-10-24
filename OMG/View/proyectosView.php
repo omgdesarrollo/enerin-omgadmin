@@ -11,13 +11,17 @@
         <link href="../../assets/vendors/jGrowl/jquery.jgrowl.css" rel="stylesheet" type="text/css"/>
         <script src="../../assets/vendors/jGrowl/jquery.jgrowl.js" type="text/javascript"></script>
 
+        <script src="../../assets/swal/sweetalert2.all.min.js" type="text/javascript"></script>
+
         <link href="../../assets/googleApi/icon.css" rel="stylesheet">
         <link type="text/css" rel="stylesheet" href="../../assets/materialize/css/materialize.min.css"  media="screen,projection"/>
         <script type="text/javascript" src="../../assets/materialize/js/materialize.min.js"></script>
 
 
         <script src="../../js/is.js" type="text/javascript"></script>
-        <script src="../../js/principal.js" type="text/javascript"></script>
+
+        <script src="../../js/proyectoView.js" type="text/javascript"></script>
+        <script src="../../js/fGridComponent.js" type="text/javascript"></script>
 
         <style>
             .collapsible
@@ -27,8 +31,8 @@
             }
             .card
             {
-                min-height:100px;
-                max-height:100px;
+                min-height:45px;
+                max-height:45px;
             }
             .card-action 
             {
@@ -40,9 +44,9 @@
             {
                 text-transform: uppercase;
             }
-            i{
+            /* i{
                 font-size:-webkit-xxx-large !important;
-            }
+            }version pro */
             .tooltip-content
             {
                 text-align:left;
@@ -55,6 +59,25 @@
             {
                 color: #3399cc !important;
             }
+            #modal_contentID
+            {
+                height:390px;
+            }
+            .datepicker-modal
+            {
+                top: 0px !important;
+            }
+            a:hover
+            {
+                font-size:20px !important;
+            }
+            
+
+
+            /* .modal-content-datepicker-container
+            {
+                min-height:200px !important;
+            } */
             /* @media only screen and (min-width:1200px){
                 a
                 {
@@ -85,11 +108,20 @@
             </li>
 
         </ul> -->
-        <div id="proyectoListado" class="row"></div>
+        <!-- <div id="headerOpciones" class="row" style="position:fixed;width:100%;margin: 10px 0px 0px 0px;padding: 0px 25px 0px 5px;"></div> -->
+        <!-- <div class="row"> -->
+        <div id="headerOpciones" style="position:fixed;width:100%;margin: 10px 0px 0px 0px;padding: 0px 0px 0px 5px;">
+            <button type="button" class="waves-effect waves-light hoverable btn modal-trigger" href="#modalAgregarProyecto">
+                Nuevo Proyecto
+            </button>
+        </div>
+        <br><br><br>
+        <div id="jsGrid"></div>
+        <!-- <div id="proyectoListado" class="row"></div>//version plus -->
         
-        <!-- Modal Structure agregar Proyecto-->
-        <div id="modal1" class="modal">
-            <div class="modal-content">
+        <!-- agregar Proyecto-->
+        <div id="modalAgregarProyecto" class="modal" style="min-height:auto">
+            <div id="modal_contentID" class="modal-content">
                 <div class="row">
                     <div class="input-field col s12 light-blue-text text-darken-3">
                         <input id="nombreProyectoInput" type="text" class="autocomplete">
@@ -119,20 +151,98 @@
             </div>
         </div>
 
+        <!-- AGREGAR MODULO -->
+        <div id="modalAgregarModulo" class="modal" style="min-height:auto">
+            <div id="modal_contentID" class="modal-content center-align">
+                <h6>AGREGAR MODULO</h6>
+                <br><br>
+                <div class="row">
+                    <div class="input-field col s12 light-blue-text text-darken-3">
+                        <input id="agregarModulo_nombreInput" type="text" class="autocomplete">
+                        <label for="agregarModulo_nombreInput">NOMBRE MODULO</label>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="input-field col s12 light-blue-text text-darken-3">
+                        <textarea id="agregarModulo_descripcionInput" class="materialize-textarea" data-length="250"></textarea>
+                        <label for="agregarModulo_descripcionInput">DESCRIPCIÓN</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <a id="agregarModulo_DescartarButton" onclick="bloquearModalMostrarModulos(0)" class="modal-close waves-effect waves-red red-text btn-flat">DESCARTAR</a>
+                <a id="agregarModulo_AceptarButton" class="waves-effect waves-green blue-text btn-flat">ACEPTAR</a>
+            </div>
+        </div>
+
+        <!-- MOSTRAR MODULOS -->
+        <div id="modalMostrarModulos" class="modal bottom-sheet modal-fixed-footer">
+        <div class="modal-content">
+            <h5 id="modalMostrarModulos_title"></h5>
+            <div id="modalMostrarModulos_content" class="row"></div>
+        </div>
+        <div class="modal-footer">
+            <a class="btn-flat grey-text lighten-1" ondragover='dragover(event)' ondrop="drop(event)"><i id="modalMostrarModulo_delete" class="material-icons">delete_forever</i></a>
+            <!-- <a id="modalMostrarModulo_delete" class="waves-effect waves-red btn-flat red-text" ondragover='allowDrop(event)' ondrop="drop(event)"><i class="material-icons">delete_forever</i></a> -->
+            <a class="modal-close waves-effect waves-red btn-flat red-text">Cerrar</a>
+        </div>
+        </div>
+
     </body>
     <script>
+        var DataGrid=[];//grid
+        var dataListado=[];//grid
+        var filtros=[];//grid
+        var db={};//grid
+        var gridInstance;//grid
+        var ultimoNumeroGrid=0;//grid
+
+        var customsFieldsGridData=[
+            {field:"customControl",my_field:MyCControlField},
+        ];//grid
+
+        estructuraGrid = [
+            { name: "PK",visible:false},
+            { name: "no", title:"N°", type: "text", width: 60, editing:false},
+            { name: "nombre", title:"Nombre Proyecto", type: "text", width: 160},
+            { name: "descripcion", title:"Descripción", type: "text", width: 180},
+            { name: "creacion",title:"Fecha Creación", type:"text", width:170,},
+            { name: "actualizacion", title:"Fecha Actualización", type: "text", width: 170},
+            { name: "modulos", title:"Modulos", type: "text", width: 80},
+            { name:"delete", title:"Opción", type:"customControl",sorting:""},
+        ];//grid
+
+        construirGrid();//grid
+        // gridInstance.loadData();
+
+        inicializarFiltros().then((resolve2)=>
+        {
+            construirFiltros();
+            listarDatos();
+        },(error)=>
+        {
+            growlError("Error!","Error al construir la vista, recargue la página");
+        });
+
         $(document).ready(function(){
+            $('.modal').modal({dismissible:false});
             // $('.tooltipped').tooltip();
         //     $('.collapsible').collapsible();
-            $('.modal').modal();
-            $('.datepicker').datepicker({format:"yyyy-mm-dd",defaultDate:new Date(),setDefaultDate:true});
+
+            //Version plus
+            // $('.modal').modal();
+            $('.datepicker').datepicker({format:"yyyy-mm-dd"});
             $('textarea').characterCounter();
         });
 
         var navegacionCrumb = $(window.parent)[0].getElement_navegacionCrumb();
         var divIframe = $(window.parent)[0].getDivIframe();
+        // var instanceTooltip;//version plus
 
         $(()=>{
+
             $("#agregarProyectoInput").on("click",()=>{
                 let bandera = 1;
                 let mensajeError = "";
@@ -156,6 +266,26 @@
             $("#fechaProyectoInput").on("focus",()=>{
                 $("#fechaProyectoInput").click();
             });
+
+            $("#agregarModulo_nombreInput , #agregarModulo_descripcionInput").keypress((evt)=>{
+                if(evt.which == 13)
+                    agregarModuloCheck();
+            });
+
+            $("#agregarModulo_AceptarButton").on("click",()=>{
+                agregarModuloCheck();
+            });
+
+            // $("#modalMostrarModulo_delete").on("focus",()=>{
+            //     alert("s");
+            //     $("i").css("font-size","20px");
+            // });
+            
+
+            // $("div.col.s4.m3.l2.xl2").on("click",(obj)=>{
+            //     alert("");
+            //     console.log(obj);
+            // });
             // $(navegacionCrumb).on("click",()=>{
                 // s
 
@@ -170,104 +300,45 @@
 
         $(navegacionCrumb).html("<a onclick='abrirProyectos()' class='breadcrumb'>Proyectos</a>");
 
-        var cardAgregarProyecto = '<div class="col s4 m3 l2 xl2">';
-        cardAgregarProyecto += '<div style="width:100%" href="#modal1" class="waves-effect waves-omg card hoverable modal-trigger" draggable="true" style="cursor:pointer">';
-        cardAgregarProyecto += '<div class="card-image center-align flow-text">';
-        cardAgregarProyecto += '<a><i class="material-icons blue-text">create_new_folder</i></a></div>';
-        cardAgregarProyecto += '<div class="card-action">';
-        cardAgregarProyecto += '<h6 class="blue-text truncate">AGREGAR PROYECTO</h6></div></div></div>';
+        // var cardAgregarProyecto = '<div class="col s4 m3 l2 xl2">';
+        // cardAgregarProyecto += '<div style="width:100%" href="#modal1" class="waves-effect waves-omg card hoverable modal-trigger" draggable="true" style="cursor:pointer">';
+        // cardAgregarProyecto += '<div class="card-image center-align flow-text">';
+        // cardAgregarProyecto += '<a><i class="material-icons blue-text">create_new_folder</i></a></div>';
+        // cardAgregarProyecto += '<div class="card-action">';
+        // cardAgregarProyecto += '<h6 class="blue-text truncate">AGREGAR PROYECTO</h6></div></div></div>';
 
-        listarProyectos = () =>
-        {
-            return new Promise((resolve,reject)=>
+        var select = -1;//version plus
+        var style_modalMostrarModulo_delete;
+        function allowDrop(ev,id){//version plus
+            // console.log(1);
+            if(select == -1)
             {
-                $.ajax({
-                    url: "../Controller/ProyectosController.php?Op=ListarProyectos",
-                    type:"GET",
-                    beforeSend:()=>
-                    {
-                        growlWait("Obteniendo Datos","Proyectos");
-                    },
-                    success:(data)=>
-                    {
-                        if(typeof(data)=="object")
-                        {
-                            let tempData="";
-                            if(data.length !=0)
-                            {
-                                growlSuccess("Datos Obtenidos","Proyectos");
-                            }
-                            else
-                                growlSuccess("Sin Datos","Proyectos");
-                            $.each(data,(index,value)=>{
-                                tempData += construirProyectos(value);
-                            });
-                            $("#proyectoListado").html(tempData+cardAgregarProyecto);
-                            $('.tooltipped').tooltip();
-
-                        }
-                        else
-                            growlError("Error Obtener Datos","Proyectos");
-                    },
-                    error:()=>
-                    {
-                        growlError("Error","Error en el servidor");                        
-                    }
-                })
-            });
+                style_modalMostrarModulo_delete = $("#modalMostrarModulo_delete").css("font-size");
+                select = id;
+            }
+            $("#modalMostrarModulo_delete").css("font-size","35px");
+            $("#modalMostrarModulo_delete").css("color","red");
         }
-        listarProyectos();
 
-        construirProyectos = (value)=>
+        function dragover(ev)
         {
-            let tempData="";
-            tempData = '<div class="col s4 m3 l2 xl2">';
-            tempData += "<div style='width:100%' ondblclick='abrirEdicionProyecto("+JSON.stringify(value)+")'" +'class="card sticky-action hoverable tooltipped" data-tooltip="Creado: '+value.creacion+'<br>Responsable: X<br>Actualización: '+value.actualizacion+'" draggable="true">';
-            tempData += '<div class="card-image center-align flow-text">';
-            tempData += '<a class="waves-effect waves-omg"><i class="material-icons blue-text" >image</i></a></div>';
-            tempData += '<div class="card-action">';
-            tempData += '<h6 class="green-text accent-4 truncate lowered">'+value.nombre+'</h6></div></div></div>';
-            return  tempData;
+            // console.log(2);
+            ev.preventDefault();
         }
 
-        abrirEdicionProyecto = (data)=>
-        {
-            data = JSON.stringify(data);
-            $(divIframe).html("<iframe src='proyectoEdicionView.php?data="+data+"'></iframe>");
+        function drag(ev){//version plus
+            // console.log(3);
+            select = -1;
+            $("#modalMostrarModulo_delete").css("font-size",style_modalMostrarModulo_delete);
+            $("#modalMostrarModulo_delete").css("color","");
         }
 
-        agregarProyecto = (data)=>
-        {
-            let dataPost = "{";
-            let bandera = 0;
-            $.each(data,(index,value)=>{
-                if(bandera == 1)
-                {
-                    dataPost += ",";
-                }
-                dataPost += index+":\""+value.val()+"\"";
-                bandera = 1;
-            });
-            console.log(dataPost+"}");
-
-            $.ajax({
-                url: "../Controller/ProyectosController.php?Op=AgregarProyecto",
-                type: "POST",
-                data: dataPost+"}",
-                beforeSend:()=>
-                {
-                    growlWait();
-                },
-                success:(resp)=>
-                {
-                    // if(resp)
-                },
-                error:()=>
-                {
-
-                }
-            });
+        function drop(ev) {//version plus
+            // console.log(4);
+            ev.preventDefault();
+            $("#cardModulo_"+select)[0]["eliminarFnCustom"][0](select);
         }
+
 
     </script>
 </html>

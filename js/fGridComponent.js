@@ -43,7 +43,7 @@ $(function(){
             }
         // }
     });
-    console.log($("tbody"));
+    // console.log($("tbody"));
     // });
 });
 
@@ -59,9 +59,9 @@ function inyectar_librerias()
     librerias += "<link href='../../css/filtroSupremo.css' rel='stylesheet' type='text/css'/>";
     librerias += "<link href='../../css/jsgridconfiguration.css' rel='stylesheet' type='text/css'/>";
 
-    let style = ".jsgrid-header-row>.jsgrid-header-cell {";
-    style += "background-color:#307ECC; font-family: 'Roboto Slab';";
-    style += "font-size: 1.2em; color: white; font-weight: normal;}";
+    // let style = ".jsgrid-header-row>.jsgrid-header-cell {";
+    // style += "background-color:#307ECC; font-family: 'Roboto Slab';";
+    // style += "font-size: 1.2em; color: white; font-weight: normal;text-align:center}";
 
     $("head").append(librerias);
     // $("style").append(style);
@@ -209,7 +209,7 @@ function construirGrid()
             // alert("3");
             // setTimeout(function(){lol();},200);
             $('.jsgrid-filter-row').removeAttr("style",'display:none');
-            setTimeout(()=>{lol();},100);
+            // setTimeout(()=>{lol();},100);
             // $(".jsgrid-grid-body").attr("style","height:53.44228935%");
             // $(window.parent).resizeTo($(window.parente).width(),$(window.parente).height()-200);
             // this.resizeTo($(window.parente).width(),$(window.parente).height()-200);

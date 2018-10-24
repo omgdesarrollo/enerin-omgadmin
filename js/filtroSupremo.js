@@ -7,10 +7,16 @@ function construirFiltros()
     $(".jsgrid-filter-row").html("");
     if(primero)
     {
-        $("#headerOpciones").append("<button type='button' title='Abrir Filtro' class='btn btn-info style-filter' onClick='mostrarFiltros()'><i class='ace-icon fa fa-sort'></i></button>");
-        $("#headerOpciones").append("<button type='button' title='Buscar Filtro ' class='btn btn-info style-filter' onClick='filtroSupremo()'><i class='ace-icon fa fa-search'></i></button>");
-        $("#headerOpciones").append("<button type='button' title='Limpiar Filtro' class='btn btn-info style-filter' onClick='limpiarFiltros()'><i class='ace-icon fa fa-filter'></i></button>");
-        $("#headerOpciones").append("<button type='button' title='Registro de Sucesos' class='btn btn-info style-filter' onClick='mostrarOcultarGrowl()'><i class='ace-icon fa fa-exchange'></i></button>");
+        // $("#headerOpciones").append('<div class="col s2 m2 x1 xl1"><button type="button" title="Recargar Datos" class="btn waves-effect waves-light light-blue darken-3 btn_filter" onclick="refresh();"><i class="small material-icons">refresh</i></button></div>');
+        // $("#headerOpciones").append("<div class='col s2 m2 x1 xl1'><button type='button' title='Abrir Filtro' class='btn waves-effect waves-light light-blue darken-3 btn_filter' onClick='mostrarFiltros()'><i class='material-icons'>filter_list</i></button></div>");
+        // $("#headerOpciones").append("<div class='col s2 m2 x1 xl1'><button type='button' title='Buscar Filtro ' class='btn waves-effect waves-light light-blue darken-3 btn_filter' onClick='filtroSupremo()'><i class='material-icons'>search</i></button></div>");
+        // $("#headerOpciones").append("<div class='col s2 m2 x1 xl1'><button type='button' title='Limpiar Filtro' class='btn waves-effect waves-light light-blue darken-3 btn_filter' onClick='limpiarFiltros()'><i class='material-icons'>settings_backup_restore</i></button></div>");
+        // $("#headerOpciones").append("<div class='col s2 m2 x1 xl1'><button type='button' title='Registro de Sucesos' class='btn waves-effect waves-light light-blue darken-3 btn_filter' onClick='mostrarOcultarGrowl()'><i class='material-icons'>chrome_reader_mode</i></button></div>");
+        $("#headerOpciones").append('<button type="button" title="Recargar Datos" class="btn waves-effect waves-light light-blue darken-3 hoverable btn_filter" onclick="refresh();"><i class="material-icons">refresh</i></button>');
+        $("#headerOpciones").append("<button type='button' title='Abrir Filtro' class='btn waves-effect waves-light light-blue darken-3 hoverable btn_filter' onClick='mostrarFiltros()'><i class='material-icons'>filter_list</i></button>");
+        $("#headerOpciones").append("<button type='button' title='Buscar Filtro ' class='btn waves-effect waves-light light-blue darken-3 hoverable btn_filter' onClick='filtroSupremo()'><i class='material-icons'>search</i></button>");
+        $("#headerOpciones").append("<button type='button' title='Limpiar Filtro' class='btn waves-effect waves-light light-blue darken-3 hoverable btn_filter' onClick='limpiarFiltros()'><i class='material-icons'>settings_backup_restore</i></button>");
+        $("#headerOpciones").append("<button type='button' title='Registro de Sucesos' class='btn waves-effect waves-light light-blue darken-3 hoverable btn_filter' onClick='mostrarOcultarGrowl()'><i class='material-icons'>chrome_reader_mode</i></button>");
         primero=false;
     }
     $.each(filtros,function(index,value)
@@ -19,7 +25,11 @@ function construirFiltros()
         if(value.type == "date")
         {
             tempData += "<input id='"+value.id+"' type='text' onkeyup='pressEnter()' style='width: 100%;display:none;'>";
-            tempData += "<input id='"+value.id+"_date' type='date' onChange='construirFiltroSelect(this,\""+value.id+"\")' style='width:100%;margin:2px;'>";
+            tempData += "<input id='"+value.id+"_date' class='datepicker filter-datep' type='date' onChange='construirFiltroSelect(this,\""+value.id+"\")' style='width:100%;margin:2px;'>";
+
+                // tempData += '<div class="input-field col s12 light-blue-text text-darken-3">';
+                // tempData += '<input id="fechaProyectoInput" type="text" class="datepicker">';
+                // tempData += '<label for="fechaProyectoInput">FECHA CREACIÓN</label></div>';
         }
         if(value.type == "text")
         {
@@ -43,6 +53,7 @@ function construirFiltros()
         tempData += "</td>"
         $(".jsgrid-filter-row").html(tempData);
     });
+    // $('.datepicker,filter-datep').datepicker({format:"yyyy-mm-dd"});
 }
 
 function construirFiltrosCombobox(datos,name,id,descripcion)
