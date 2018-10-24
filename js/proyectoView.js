@@ -167,9 +167,7 @@ construirModulosProyecto = (data)=>
         $("#cardModulo_"+value.pk)[0]["dataCustom"]=value;
         $("#cardModulo_"+value.pk)[0]["eliminarFnCustom"]=[preguntarEliminarModulo];
     });
-    if($('.tooltipped').tooltip()!=undefined);
-        $('.tooltipped').tooltip("destroy");
-    $('.tooltipped').tooltip();
+    reiniciarTooltip();
 }
 
 bloquearModalMostrarModulos = (opcion)=>
@@ -353,4 +351,10 @@ eliminarModulo = (pk)=>
         }
     });
 
+}
+
+reiniciarTooltip = ()=>
+{
+    $('.material-tooltip').remove();
+    $('.tooltipped').tooltip();
 }
