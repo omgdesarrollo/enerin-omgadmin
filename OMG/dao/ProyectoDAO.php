@@ -33,7 +33,7 @@ class ProyectoDAO{
     public function getModulos($baseAdmin,$PK)
     {
         try{
-            $query="SELECT tbmodulo.pk, tbmodulo.nombre, tbmodulo.descripcion
+            $query="SELECT tbmodulo.pk, tbmodulo.nombre, tbmodulo.descripcion,tbmodulo.fk_proyecto
             FROM modulo tbmodulo WHERE tbmodulo.fk_proyecto = $PK";
             $db =  AccesoDB::getInstancia($baseAdmin);
             $lista = $db->executeQuery($query);
@@ -87,6 +87,19 @@ class ProyectoDAO{
             $db =  AccesoDB::getInstancia($baseAdmin);
             $lista = $db->executeQuery($query);
             return $lista;
+            } catch (Exception $e){
+                throw $e;
+                return -1;
+            }
+    }
+
+    public function eliminarModulo($baseAdmin,$PK)
+    {
+        try{
+            $query="DELETE FROM modulo WHERE pk = $PK";
+            $db =  AccesoDB::getInstancia($baseAdmin);
+            $exito = $db->executeUpdateRowsAfected($query);
+            return $exito;
             } catch (Exception $e){
                 throw $e;
                 return -1;

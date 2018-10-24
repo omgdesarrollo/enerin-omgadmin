@@ -71,6 +71,11 @@
             {
                 font-size:20px !important;
             }
+            #jGrowl
+            {
+                height:50%;
+                bottom:50%;
+            }
             
 
 
@@ -115,7 +120,7 @@
                 Nuevo Proyecto
             </button>
         </div>
-        <br><br><br>
+        <br><br><br><br><rb>
         <div id="jsGrid"></div>
         <!-- <div id="proyectoListado" class="row"></div>//version plus -->
         
@@ -152,13 +157,13 @@
         </div>
 
         <!-- AGREGAR MODULO -->
-        <div id="modalAgregarModulo" class="modal" style="min-height:auto">
+        <div id="modalAgregarModulo" class="modal modal-fixed-footer" style="min-height:auto">
             <div id="modal_contentID" class="modal-content center-align">
                 <h6>AGREGAR MODULO</h6>
                 <br><br>
                 <div class="row">
                     <div class="input-field col s12 light-blue-text text-darken-3">
-                        <input id="agregarModulo_nombreInput" type="text" class="autocomplete">
+                        <input id="agregarModulo_nombreInput" type="text" class="autocomplete" style="text-transform: uppercase">
                         <label for="agregarModulo_nombreInput">NOMBRE MODULO</label>
                     </div>
                 </div>
@@ -179,12 +184,12 @@
 
         <!-- MOSTRAR MODULOS -->
         <div id="modalMostrarModulos" class="modal bottom-sheet modal-fixed-footer">
-        <div class="modal-content">
+        <div class="modal-content" style="padding-bottom:0px">
             <h5 id="modalMostrarModulos_title"></h5>
             <div id="modalMostrarModulos_content" class="row"></div>
         </div>
         <div class="modal-footer">
-            <a class="btn-flat grey-text lighten-1" ondragover='dragover(event)' ondrop="drop(event)"><i id="modalMostrarModulo_delete" class="material-icons">delete_forever</i></a>
+            <a class="btn-flat grey-text lighten-1" ondragover='dragover(event)' ondrop="drop(event)" style="cursor:default"><i id="modalMostrarModulo_delete" class="material-icons">delete_forever</i></a>
             <!-- <a id="modalMostrarModulo_delete" class="waves-effect waves-red btn-flat red-text" ondragover='allowDrop(event)' ondrop="drop(event)"><i class="material-icons">delete_forever</i></a> -->
             <a class="modal-close waves-effect waves-red btn-flat red-text">Cerrar</a>
         </div>
@@ -210,7 +215,7 @@
             { name: "descripcion", title:"Descripción", type: "text", width: 180},
             { name: "creacion",title:"Fecha Creación", type:"text", width:170,},
             { name: "actualizacion", title:"Fecha Actualización", type: "text", width: 170},
-            { name: "modulos", title:"Modulos", type: "text", width: 80},
+            { name: "modulos", title:"Modulos", type: "text", width: 80, editing:false},
             { name:"delete", title:"Opción", type:"customControl",sorting:""},
         ];//grid
 

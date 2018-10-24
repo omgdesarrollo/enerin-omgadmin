@@ -139,6 +139,7 @@ agregarProyecto = (data)=>
 construirModulosProyecto = (data)=>
 {
     let cardAgregarModulo = '<div class="col s4 m3 l2 xl2">';
+    // let cardAgregarModulo = '<div class="col s12 m12 l12 xl12">';
     cardAgregarModulo += '<div onclick="bloquearModalMostrarModulos(1)" style="width:100%;background:#26a69a" href="#modalAgregarModulo" class="waves-effect waves-light white-text card hoverable modal-trigger" style="cursor:pointer">';
     cardAgregarModulo += '<div class="card-image center-align flow-text">';
     cardAgregarModulo += '</div>';
@@ -158,6 +159,7 @@ construirModulosProyecto = (data)=>
         tempData += '<div class="col s9 valign-wrapper" style="min-height:45px;max-height:45px;">'+value.nombre+'</div></div></div></div>';
     });
     tempData+=cardAgregarModulo;
+    // $("#modalMostrarModulos_footer").append(cardAgregarModulo);
     $("#modalMostrarModulos_content").html(tempData);
     $("#modalMostrarModulos_content")[0]["dataCustom"]=data;
     $("#modalMostrarModulos_title").html(data.nombre);
@@ -165,7 +167,9 @@ construirModulosProyecto = (data)=>
         $("#cardModulo_"+value.pk)[0]["dataCustom"]=value;
         $("#cardModulo_"+value.pk)[0]["eliminarFnCustom"]=[preguntarEliminarModulo];
     });
-    $('.tooltipped').tooltip();//Version plus
+    if($('.tooltipped').tooltip()!=undefined);
+        $('.tooltipped').tooltip("destroy");
+    $('.tooltipped').tooltip();
 }
 
 bloquearModalMostrarModulos = (opcion)=>
@@ -307,5 +311,46 @@ preguntarEliminarModulo = (pk)=>
 
 eliminarModulo = (pk)=>
 {
-    console.log("funcion eliminar");
+    let datos = $("#cardModulo_"+pk)[0]["dataCustom"];
+    $.ajax({
+        url: "../Controller/ProyectosController.php?Op=EliminarModulo",
+        type: "POST",
+        data: "PK="+pk,
+        beforeSend:()=>
+        {
+            growlWait("Eliminar Modulo","Eliminando...");
+        },
+        success:(resp)=>
+        {
+            let index1=-1;
+            let index2=-1;
+            (resp==1)
+            ?(
+                growlSuccess("Eliminar Modulo","Modulo Eliminado"),
+                id_vista = datos.fk_proyecto,
+                $.each(dataListado,(index,value)=>{
+                    if( value["pk"]==id_vista)
+                    {
+                        index1=index;
+                        $.each(value.modulos,(ind,val)=>{
+                            if(val["pk"]==pk)
+                                index2=ind;
+                        });
+                    }
+                })
+            ):  growlError("Error Eliminar Modulo","No se pudo eliminar el modulo");
+            if( index2!=-1 )
+            {
+                dataListado[index1]["modulos"].splice(index2,1);
+                construirModulosProyecto(dataListado[index1]);
+                componerDataGrid();
+                gridInstance.loadData();
+            }
+        },
+        error:()=>
+        {
+            growlError("Error","Error en el servidor");
+        }
+    });
+
 }

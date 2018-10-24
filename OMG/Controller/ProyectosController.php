@@ -40,6 +40,12 @@ switch ($Op) {
             echo $PK;
     break;
 
+    case "EliminarModulo":
+        header('Content-type: application/json; charset=utf-8');
+        $PK = $_REQUEST["PK"];
+        $exito = $model->eliminarModulo($PK);
+        echo json_encode($exito);
+    break;
     
     default: echo -1; break;
     }

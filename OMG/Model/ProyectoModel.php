@@ -92,6 +92,22 @@ class ProyectoModel{
             return -1;
         }
     }
+
+    public function eliminarModulo($PK)
+    {
+        try{
+            $dao = new ProyectoDAO();
+            $pojo = new dataBasePojo();
+            $baseAdmin = $pojo->getconfigBase();
+
+            $exito = $dao->eliminarModulo($baseAdmin,$PK);
+            return $exito;
+        }  catch (Exception $e)
+        {
+            throw  $e;
+            return -1;
+        }
+    }
 }
 
 ?>
