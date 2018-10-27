@@ -46,6 +46,25 @@ switch ($Op) {
         $exito = $model->eliminarModulo($PK);
         echo json_encode($exito);
     break;
+
+    case "EditarModulo":
+        header('Content-type: application/json; charset=utf-8');
+        $datos = json_decode($_REQUEST["datos"],true);
+        $exito = $model->editarModulo($datos);
+        echo $exito;
+    break;
+
+    case "EditarProyecto":
+        header('Content-type: application/json; charset=utf-8');
+        $datos = json_decode($_REQUEST["datos"],true);
+        $exito = $model->editarProyecto($datos);
+        if($exito >= 0)
+        {
+            $Lista = $model->listarProyecto($datos["PK"]);
+            echo json_encode($Lista);
+        }
+        echo $exito;
+    break;
     
     default: echo -1; break;
     }

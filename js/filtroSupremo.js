@@ -25,7 +25,7 @@ function construirFiltros()
         if(value.type == "date")
         {
             tempData += "<input id='"+value.id+"' type='text' onkeyup='pressEnter()' style='width: 100%;display:none;'>";
-            tempData += "<input id='"+value.id+"_date' class='datepicker filter-datep' type='date' onChange='construirFiltroSelect(this,\""+value.id+"\")' style='width:100%;margin:2px;'>";
+            tempData += "<input id='"+value.id+"_date' class='timepicker filter-datep' type='text' onChange='construirFiltroSelect(this,\""+value.id+"\")' style='width:100%;margin:2px;'>";
 
                 // tempData += '<div class="input-field col s12 light-blue-text text-darken-3">';
                 // tempData += '<input id="fechaProyectoInput" type="text" class="datepicker">';

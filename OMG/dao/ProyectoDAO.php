@@ -105,5 +105,31 @@ class ProyectoDAO{
                 return -1;
             }
     }
+
+    public function editarModulo($baseAdmin,$PK,$nombre,$descripcion)
+    {
+        try{
+            $query="UPDATE modulo SET nombre = UPPER('$nombre'), descripcion = '$descripcion' WHERE pk = $PK";
+            $db =  AccesoDB::getInstancia($baseAdmin);
+            // echo $query;
+            $exito = $db->executeUpdateRowsAfected($query);
+            return $exito;
+            } catch (Exception $e){
+                throw $e;
+                return -1;
+            }
+    }
+
+    public function editarProyecto($baseAdmin,$query)
+    {
+        try{
+            $db =  AccesoDB::getInstancia($baseAdmin);
+            $exito = $db->executeUpdateRowsAfected($query);
+            return $exito;
+            } catch (Exception $e){
+                throw $e;
+                return -1;
+            }
+    }
 }
 ?>

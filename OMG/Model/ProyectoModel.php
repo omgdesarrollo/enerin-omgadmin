@@ -108,6 +108,53 @@ class ProyectoModel{
             return -1;
         }
     }
+
+    public function editarModulo($datos)
+    {
+        try{
+            $dao = new ProyectoDAO();
+            $pojo = new dataBasePojo();
+            $baseAdmin = $pojo->getconfigBase();
+
+            $exito = $dao->editarModulo($baseAdmin,$datos["pk"],$datos["nombre"],$datos["descripcion"]);
+            return $exito;
+        }  catch (Exception $e)
+        {
+            throw  $e;
+            return -1;
+        }
+    }
+
+    public function editarProyecto($datos)
+    {
+        try{
+            $dao = new ProyectoDAO();
+            $pojo = new dataBasePojo();
+            $baseAdmin = $pojo->getconfigBase();
+            $query = "";
+            // var_dump($datos);
+            foreach($datos as $key=>$value)
+            {
+                if($query=="")
+                {
+                    $query = "UPDATE proyecto SET ";
+                }else
+                {
+                    $query .= ", ";
+                }
+                if($key != "PK")
+                    $query .= " $key = $value";
+            }
+            $query .= "WHERE PK = ".$datos["PK"];
+            // echo $query;
+            $exito = $dao->editarProyecto($baseAdmin,$query);
+            return $exito;
+        }  catch (Exception $e)
+        {
+            throw  $e;
+            return -1;
+        }
+    }
 }
 
 ?>

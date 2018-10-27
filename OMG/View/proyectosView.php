@@ -8,6 +8,7 @@
         <script src="../../js/jquery.min.js" type="text/javascript"></script>
 
         <link href="../../css/settingsView.css" rel="stylesheet" type="text/css"/>
+
         <link href="../../assets/vendors/jGrowl/jquery.jgrowl.css" rel="stylesheet" type="text/css"/>
         <script src="../../assets/vendors/jGrowl/jquery.jgrowl.js" type="text/javascript"></script>
 
@@ -17,7 +18,7 @@
         <link type="text/css" rel="stylesheet" href="../../assets/materialize/css/materialize.min.css"  media="screen,projection"/>
         <script type="text/javascript" src="../../assets/materialize/js/materialize.min.js"></script>
 
-
+        <script src="../../js/fechas_formato.js" type="text/javascript"></script>
         <script src="../../js/is.js" type="text/javascript"></script>
 
         <script src="../../js/proyectoView.js" type="text/javascript"></script>
@@ -182,6 +183,32 @@
             </div>
         </div>
 
+        <!-- AGREGAR MODULO -->
+        <div id="modalEditarModulo" class="modal modal-fixed-footer" style="min-height:auto">
+            <div id="modal_contentID" class="modal-content center-align">
+                <h6>EDITAR MODULO</h6>
+                <br><br>
+                <div class="row">
+                    <div class="input-field col s12 light-blue-text text-darken-3">
+                        <input id="editarModulo_nombreInput" type="text" class="autocomplete" style="text-transform: uppercase">
+                        <label for="editarModulo_nombreInput">NOMBRE MODULO</label>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="input-field col s12 light-blue-text text-darken-3">
+                        <textarea id="editarModulo_descripcionInput" class="materialize-textarea" data-length="250"></textarea>
+                        <label for="editarModulo_descripcionInput">DESCRIPCIÓN</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <a id="editarModulo_DescartarButton" onclick="bloquearModalMostrarModulos(0)" class="modal-close waves-effect waves-red red-text btn-flat">DESCARTAR</a>
+                <a id="editarModulo_AceptarButton" class="waves-effect waves-green blue-text btn-flat">ACEPTAR</a>
+            </div>
+        </div>
+
         <!-- MOSTRAR MODULOS -->
         <div id="modalMostrarModulos" class="modal bottom-sheet modal-fixed-footer">
         <div class="modal-content" style="padding-bottom:0px">
@@ -195,6 +222,8 @@
         </div>
         </div>
 
+        <input id="getFechaID" type="date" class="datepicker" style="display:''"></input>
+
     </body>
     <script>
         var DataGrid=[];//grid
@@ -204,8 +233,90 @@
         var gridInstance;//grid
         var ultimoNumeroGrid=0;//grid
 
+        var MyDateField = function(config)
+        {
+            jsGrid.Field.call(this, config);
+        };
+ 
+        MyDateField.prototype = new jsGrid.Field
+        ({
+            css: "date-field",
+            align: "center",
+            sorter: function(date1, date2)
+            {},
+            itemTemplate: function(value)
+            {
+                return getSinFechaFormato(value);
+            },
+            insertTemplate: function(value)
+            {},
+            editTemplate: function(value)
+            {
+                fecha="0000-00-00";
+                if(value!=fecha)
+                {
+                        fecha=value;
+                }
+                this._inputDate = $("<input>").attr({type:"date",value:fecha,style:"margin:-5px;width:145px"});
+                // $('.datepicker').datepicker({format:"yyyy-mm-dd"});
+                return this._inputDate;
+            },
+            insertValue: function()
+            {},
+            editValue: function(val)
+            {
+                value = this._inputDate[0].value;
+                if(value=="")
+                        return "0000-00-00";
+                else
+                        return $(this._inputDate).val();
+            }
+        });
+
+        var MyDateTimeField = function(config)
+        {
+            jsGrid.Field.call(this, config);
+        };
+ 
+        MyDateTimeField.prototype = new jsGrid.Field
+        ({
+            css: "date-field",
+            align: "center",
+            sorter: function(date1, date2)
+            {},
+            itemTemplate: function(value)
+            {
+                return getFechaFormatoH(value);
+            },
+            insertTemplate: function(value)
+            {},
+            editTemplate: function(value)
+            {
+                fecha="0000-00-00";
+                if(value!=fecha)
+                {
+                        fecha=value;
+                }
+                // return this._inputDate = $("<input>").attr({class:"",type:"datetime-local",value:fecha,style:"margin:-5px;width:145px"});
+                return this._inputDate = $("<input>").attr({onclick:"getFechaInput(this)",value:value,type:"text"})
+                // return '<input type="datetime" name="fechahora" step="1" min="2013-01-01T00:00Z" max="2013-12-31T12:00Z" value="2013-01-01T12:00">';
+            },
+            insertValue: function()
+            {},
+            editValue: function(val)
+            {
+                value = this._inputDate[0].value;
+                if(value=="")
+                        return "0000-00-00";
+                else
+                        return $(this._inputDate).val();
+            }
+        });
+
         var customsFieldsGridData=[
             {field:"customControl",my_field:MyCControlField},
+            {field:"date",my_field:MyDateField},
+            {field:"dateTime",my_field:MyDateTimeField},
         ];//grid
 
         estructuraGrid = [
@@ -213,8 +324,8 @@
             { name: "no", title:"N°", type: "text", width: 60, editing:false},
             { name: "nombre", title:"Nombre Proyecto", type: "text", width: 160},
             { name: "descripcion", title:"Descripción", type: "text", width: 180},
-            { name: "creacion",title:"Fecha Creación", type:"text", width:170,},
-            { name: "actualizacion", title:"Fecha Actualización", type: "text", width: 170},
+            { name: "creacion",title:"Fecha Creación", type:"date", width:170,},
+            { name: "actualizacion", title:"Fecha Actualización", type: "dateTime", width: 170},
             { name: "modulos", title:"Modulos", type: "text", width: 80, editing:false},
             { name:"delete", title:"Opción", type:"customControl",sorting:""},
         ];//grid
@@ -238,7 +349,11 @@
 
             //Version plus
             // $('.modal').modal();
-            $('.datepicker').datepicker({format:"yyyy-mm-dd"});
+            $('.timepicker').timepicker();
+            $('.datepicker').datepicker({format:"yyyy-mm-dd",i18n:{cancel:"DESCARTAR",months:monthsLarge,monthsShort:months,weekdays:weekdays,weekdaysAbbrev:weekdaysAbrev,weekdaysShort:weekdaysCorto} });
+            // months
+            // weekdays
+            // monsthLarge
             $('textarea').characterCounter();
         });
 
@@ -280,6 +395,12 @@
             $("#agregarModulo_AceptarButton").on("click",()=>{
                 agregarModuloCheck();
             });
+
+            $("#editarModulo_AceptarButton").on("click",()=>{
+                editarModuloCheck();
+            });
+
+            $("#getFechaInput").on()
 
             // $("#modalMostrarModulo_delete").on("focus",()=>{
             //     alert("s");

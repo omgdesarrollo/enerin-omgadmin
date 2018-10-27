@@ -152,8 +152,8 @@ construirModulosProyecto = (data)=>
         // ondrop='drop(event,"+value.pk+")'
         // ondragover='allowDrop(event,"+value.pk+")'
         tempData += '<div class="col s4 m3 l2 xl2">';
-        tempData += "<div id='cardModulo_"+value.pk+"' style='width:100%;background:powderblue;' ondragstart='allowDrop(event,"+value.pk+")' ondragend='drag(event)' ondragover='dragover(event)' ";
-        tempData += "href='#' class='waves-effect waves-omg card hoverable modal-trigger tooltipped' data-tooltip='"+value.descripcion+"' draggable='true' style='cursor:pointer'>";
+        tempData += "<div ondblclick='editarModuloAccion(this)' id='cardModulo_"+value.pk+"' style='width:100%;background:powderblue;' ondragstart='allowDrop(event,"+value.pk+")' ondragend='drag(event)' ondragover='dragover(event)' ";
+        tempData += "class='waves-effect waves-omg card hoverable tooltipped' data-tooltip='"+value.descripcion+"' draggable='true' style='cursor:pointer'>";
         tempData += '<div class="card-image center-align flow-text"></div>';
         tempData += '<div class="row center-align" style="margin-bottom:0px"><div class="col s3" style="margin-top:10px"><i class="material-icons blue-text">extension</i></div>';
         tempData += '<div class="col s9 valign-wrapper" style="min-height:45px;max-height:45px;">'+value.nombre+'</div></div></div></div>';
@@ -184,6 +184,8 @@ bloquearModalMostrarModulos = (opcion)=>
     $("#modalMostrarModulos").attr("style","z-index:1002 !important;opacity:0.5;bottom:"+b+";display:"+d) : 
     (   $("#agregarModulo_nombreInput").val(""),
         $("#agregarModulo_descripcionInput").val(""),
+        $("#editarModulo_nombreInput").val(""),
+        $("#editarModulo_descripcionInput").val(""),
         $("#modalMostrarModulos").attr("style","z-index:1003 !important;opacity:1;bottom:"+b+";display:"+d) );
 }
 
@@ -289,7 +291,7 @@ componerDataGrid = ()=>//listo
 
 preguntarEliminarModulo = (pk)=>
 {
-    console.log("Listo Eliminar: "+pk);
+    // console.log("Listo Eliminar: "+pk);
     swal({
         title: "",
         text: "¿Eliminar Modulo?",
@@ -357,4 +359,181 @@ reiniciarTooltip = ()=>
 {
     $('.material-tooltip').remove();
     $('.tooltipped').tooltip();
+}
+
+editarModuloAccion = (obj)=>
+{
+    // console.log(obj);
+    // console.log($(obj)[0]["dataCustom"] );
+    bloquearModalMostrarModulos(1);
+    $("#modalEditarModulo")[0]["dataCustomPK"] = $(obj)[0]["dataCustom"]["pk"];
+    $("#modalEditarModulo")[0]["dataCustomFK"] = $(obj)[0]["dataCustom"]["fk_proyecto"];
+    $("#modalEditarModulo")[0]["dataCustomNombre"] = $(obj)[0]["dataCustom"]["nombre"];
+    $("#modalEditarModulo")[0]["dataCustomDesc"] = $(obj)[0]["dataCustom"]["descripcion"];
+    $("#editarModulo_nombreInput").val($(obj)[0]["dataCustom"]["nombre"]);
+    $("#editarModulo_descripcionInput").val($(obj)[0]["dataCustom"]["descripcion"]);
+    $("#modalEditarModulo").modal('open');
+    $("#editarModulo_descripcionInput").focus();
+    $("#editarModulo_nombreInput").focus();
+    $("#editarModulo_nombreInput").focusout();
+}
+
+editarModuloCheck = ()=>
+{
+    let bandera = 0;
+    let mensajeError = "";
+    let datosProyecto = new Object();
+
+    datosProyecto["nombre"] = $("#editarModulo_nombreInput");
+    datosProyecto["descripcion"] = $("#editarModulo_descripcionInput");
+    if($("#modalEditarModulo")[0]["dataCustomNombre"]==datosProyecto["nombre"].val() && $("#modalEditarModulo")[0]["dataCustomDesc"]==datosProyecto["descripcion"].val())
+    {
+        bandera = 1;
+        mensajeError += "*NOMBRE MODULO\n";
+        mensajeError += "*DESCRIPCIÓN";
+    }
+    bandera==0?(
+    $.each(datosProyecto,(index,value)=>{
+        if(value.val().trim()=="")
+        {
+            bandera = 1;
+            mensajeError += "*"+value[0].labels[0].innerHTML+"\n";
+        }
+    }),
+    bandera==1?
+        growlError("Campos Requeridos",mensajeError):(
+            datosProyecto["nombre"] = $("#editarModulo_nombreInput").val().toUpperCase(),
+            datosProyecto["descripcion"] = $("#editarModulo_descripcionInput").val(),
+            datosProyecto["pk"] = $("#modalEditarModulo")[0]["dataCustomPK"],
+            datosProyecto["fk_proyecto"] = $("#modalEditarModulo")[0]["dataCustomFK"],
+            editarModulo(datosProyecto))
+        ): growlError("Campos Sin Cambios",mensajeError);
+}
+
+editarModulo = (data)=>
+{
+    $.ajax({
+        url: "../Controller/ProyectosController.php?Op=EditarModulo",
+        type: "POST",
+        data: "datos="+JSON.stringify(data),
+        beforeSend:()=>
+        {
+            growlWait("Editar Modulo","...");
+        },
+        success:(resp)=>
+        {
+            if(resp>0)
+            {
+                id_vista = data.fk_proyecto;
+                id_string = "pk";
+                growlSuccess("Editar Modulo","Modulo Editado");
+                $.each(dataListado,(index,value)=>{
+                    // console.log(value);
+                    if(value["pk"] == id_vista)
+                    {
+                        $.each(value["modulos"],(ind,val)=>{
+                            if( val["pk"]==data["pk"] )
+                            {
+                                dataListado[index]["modulos"][ind]["nombre"] = data["nombre"];
+                                dataListado[index]["modulos"][ind]["descripcion"] = data["descripcion"];
+                                construirModulosProyecto(dataListado[index]);
+                                bloquearModalMostrarModulos(0);
+                                $('#modalEditarModulo.modal').modal('close');
+                                componerDataGrid();
+                                gridInstance.loadData();
+                            }
+                        });
+                    }
+                });
+            }
+            else
+                growlError("Error Editar Modulo","No se pudo editar el modulo");
+        },
+        error:()=>
+        {
+            growlError("Error","Error en el servidor");
+        }
+    });
+}
+
+preguntarEliminar = (data)=>
+{
+    console.log(data);
+}
+
+saveUpdateToDatabase = (args)=>
+{
+    console.log(args);
+    let columnas = new Object();
+    let PK = args["item"]["PK"];
+    $.each(args["item"],(index,value)=>{
+        if(index!="PK" && index!="modulos" && index!="delete")
+        {
+            if( value!=args["previousItem"][index] )
+                columnas[index] = value;
+        }
+    });
+    if(Object.keys(columnas).length != 0)
+    {
+        columnas["PK"] = PK;
+        $.ajax({
+            url: "../Controller/ProyectosController.php?Op=EditarProyecto",
+            type: "GET",
+            data: "datos="+JSON.stringify(columnas),
+            beforeSend:()=>
+            {
+                growlWait("Editando Proyecto","...");
+            },
+            success:(resp)=>
+            {
+                typeof(resp)=="object"? resp.length > 0 ?(
+                    growlSuccess("Editar Proyecto","Proyecto Editado"),
+                    $.each(dataListado,(index,value)=>{
+                        if(value["pk"] == PK)
+                        {
+                            dataListado[index] = resp;
+                        }
+                    })
+                ): growlError("Error Editar Proyecto","Se edito el proyecto pero fallo al mostrar en la vista") : growlError("Error Editar Proyecto","Error al editar el proyecto");
+                componerDataGrid();
+                gridInstance.loadData();
+            },
+            error:()=>
+            {
+                growlError("Error","Error en el servidor");
+                componerDataGrid();
+                gridInstance.loadData();
+            }
+        });
+    }
+    else
+    {
+        componerDataGrid();
+        gridInstance.loadData();
+    }
+}
+
+getFechaInput = (obj)=>
+{
+    console.log($(obj));
+    let data = $(obj).val();
+    let btnDone = $("#getFechaID")[0]["M_Datepicker"]["doneBtn"];
+    $("#getFechaID").val("");
+    // data = data.split(" ");
+    // console.log($("#getFechaID")[0]["M_Datepicker"]);
+    // $("#getFechaID").val(data[0]);
+    $(btnDone).attr("onClick","getHoraInput("+obj+")");
+    $("#getFechaID").click();
+
+    // $("#getFechaID")[0]["M_Datepicker"][""]
+    
+    // console.log($("#getFechaID")[0]["M_Datepicker"]["options"]["setDefaultDate"]=true);
+}
+
+getHoraInput = (a)=>
+{
+    // let hour = data.split(" ")[1];
+    let hour = $("#getFechaID").val();
+    // hour !="" ? console.log(hour):  ;
+    console.log(a);
 }

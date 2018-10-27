@@ -1,5 +1,9 @@
 
 months = ["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"];
+weekdays = ["Do","Lu","Ma","Mi","Ju","Vi","Sa"];
+monthsLarge = ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
+weekdaysAbrev = ["D", "L", "M", "M", "J", "V", "S"];
+weekdaysCorto = ["Dom","Lun","Mar","Mie","Jue","Vie","Sab"];
 
 function getSinFechaFormato(value)//listo
 {
