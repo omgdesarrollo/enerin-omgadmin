@@ -23,7 +23,7 @@ class ProyectoModel{
         }
     }
 
-    public function listarProyecto()
+    public function listarProyecto($PK)
     {
         try{
             $dao = new ProyectoDAO();
@@ -34,7 +34,7 @@ class ProyectoModel{
             $rec = $dao->listarProyecto($baseAdmin,$PK);
             foreach($rec as $key=>$value)
             {
-                $rec[$key]["modulos"] = $dao->getModulos($value["pk"]);
+                $rec[$key]["modulos"] = $dao->getModulos($baseAdmin,$value["pk"]);
             }
             return $rec;
         }  catch (Exception $e)
@@ -132,6 +132,9 @@ class ProyectoModel{
             $pojo = new dataBasePojo();
             $baseAdmin = $pojo->getconfigBase();
             $query = "";
+            $size = sizeof($datos)-1;
+            $bandera=1;
+            // echo $size;
             // var_dump($datos);
             foreach($datos as $key=>$value)
             {
@@ -140,12 +143,14 @@ class ProyectoModel{
                     $query = "UPDATE proyecto SET ";
                 }else
                 {
-                    $query .= ", ";
+                    if($size==$bandera)
+                        $query .= ", ";
                 }
                 if($key != "PK")
-                    $query .= " $key = $value";
+                    $query .= " $key = '$value'";
+                $bandera++;
             }
-            $query .= "WHERE PK = ".$datos["PK"];
+            $query .= " WHERE PK = ".$datos["PK"];
             // echo $query;
             $exito = $dao->editarProyecto($baseAdmin,$query);
             return $exito;
@@ -155,6 +160,23 @@ class ProyectoModel{
             return -1;
         }
     }
+
+    public function eliminarProyecto($PK)
+    {
+        try{
+            $dao = new ProyectoDAO();
+            $pojo = new dataBasePojo();
+            $baseAdmin = $pojo->getconfigBase();
+
+            $exito = $dao->eliminarProyecto($baseAdmin,$PK);
+            return $exito;
+        }  catch (Exception $e)
+        {
+            throw  $e;
+            return -1;
+        }
+    }
+    
 }
 
 ?>

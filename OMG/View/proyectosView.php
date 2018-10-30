@@ -62,7 +62,7 @@
             }
             #modal_contentID
             {
-                height:390px;
+                height:420px;
             }
             .datepicker-modal
             {
@@ -76,6 +76,10 @@
             {
                 height:50%;
                 bottom:50%;
+            }
+            input.select-dropdown
+            {
+                width:85px !important;
             }
             
 
@@ -222,8 +226,36 @@
         </div>
         </div>
 
-        <input id="getFechaID" type="date" class="datepicker" style="display:''"></input>
+        <!-- CAMBIAR FECHA Y HORA GRID -->
+        <div id="modalEditarFechaGrid" class="modal" style="min-height:auto">
+            <div id="modal_contentID" class="modal-content center-align">
+                <h6>CAMBIAR FECHA ACTUALIZACIÓN</h6>
+                <br><br>
+                <div class="row">
+                    <div class="input-field col s12 light-blue-text text-darken-3">
+                        <!-- <input id="agregarModulo_nombreInput" type="text" class="autocomplete" style="text-transform: uppercase"> -->
+                        <input id="editarFecha_fechaInput" type="text" class="datepicker" style="display:''"></input>
+                        <label for="editarFecha_fechaInput">FECHA</label>
+                    </div>
+                </div>
 
+                <div class="row">
+                    <div class="input-field col s12 light-blue-text text-darken-3">
+                        <!-- <textarea id="agregarModulo_descripcionInput" class="materialize-textarea" data-length="250"></textarea> -->
+                        <input id="editarHora_horaInput" type="text" class="timepicker" style="display:''"></input>
+                        <label for="editarHora_horaInput">HORA</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+            <!-- onclick="bloquearModalMostrarModulos(0)" -->
+                <a id="editarFecha_DescartarButton" class="modal-close waves-effect waves-red red-text btn-flat">DESCARTAR</a>
+                <a id="editarFecha_AceptarButton" class="waves-effect waves-green blue-text btn-flat">ACEPTAR</a>
+            </div>
+        </div>
+
+        <input id="editarFechaGrid_CreacionInput" type="text" class="datepicker" style="display:none"></input>
     </body>
     <script>
         var DataGrid=[];//grid
@@ -250,14 +282,16 @@
             },
             insertTemplate: function(value)
             {},
-            editTemplate: function(value)
+            editTemplate: function(value,data)
             {
                 fecha="0000-00-00";
                 if(value!=fecha)
                 {
                         fecha=value;
                 }
-                this._inputDate = $("<input>").attr({type:"date",value:fecha,style:"margin:-5px;width:145px"});
+                $("#editarFechaGrid_CreacionInput")[0]["dataCustom"] = data;
+                this._inputDate = $("<input>").attr({id:"grid_fechaCreacion_"+data.PK,onClick:"gridFechaEditarProyecto(this)",type:"text",value:fecha,style:"margin:-5px;width:145px"});
+                // grid_fechaActualizacion_
                 // $('.datepicker').datepicker({format:"yyyy-mm-dd"});
                 return this._inputDate;
             },
@@ -290,16 +324,19 @@
             },
             insertTemplate: function(value)
             {},
-            editTemplate: function(value)
+            editTemplate: function(value,data)
             {
-                fecha="0000-00-00";
+                console.log(data);
+                let time = data.actualizacion.split(" ");
+                fecha="0000-00-00 00:00:00";
                 if(value!=fecha)
                 {
                         fecha=value;
                 }
-                // return this._inputDate = $("<input>").attr({class:"",type:"datetime-local",value:fecha,style:"margin:-5px;width:145px"});
-                return this._inputDate = $("<input>").attr({onclick:"getFechaInput(this)",value:value,type:"text"})
-                // return '<input type="datetime" name="fechahora" step="1" min="2013-01-01T00:00Z" max="2013-12-31T12:00Z" value="2013-01-01T12:00">';
+                $("#editarFecha_fechaInput").val(time[0]);
+                $("#editarHora_horaInput").val(time[1]);
+                $("#modalEditarFechaGrid")[0]["dataCustom"] = data;
+                return this._inputDate = $("<input>").attr({id:"grid_fechaActualizacion_"+data.PK,value:value,type:"text",class:"modal-trigger",href:"#modalEditarFechaGrid"})
             },
             insertValue: function()
             {},
@@ -344,12 +381,20 @@
 
         $(document).ready(function(){
             $('.modal').modal({dismissible:false});
+            // $("#modalEditarFechaGrid.modal").modal({dismissible:false,options:{
+            //     onOpenEnd:()=>{
+            //         alert("A");
+            //         $("#editarHora_horaInput").focus();
+            //         $("#editarFecha_fechaInput").focus();
+            //     }
+            // }});
             // $('.tooltipped').tooltip();
         //     $('.collapsible').collapsible();
 
             //Version plus
             // $('.modal').modal();
-            $('.timepicker').timepicker();
+            $('.timepicker').timepicker({twelveHour:false});
+            
             $('.datepicker').datepicker({format:"yyyy-mm-dd",i18n:{cancel:"DESCARTAR",months:monthsLarge,monthsShort:months,weekdays:weekdays,weekdaysAbbrev:weekdaysAbrev,weekdaysShort:weekdaysCorto} });
             // months
             // weekdays
@@ -400,7 +445,46 @@
                 editarModuloCheck();
             });
 
-            $("#getFechaInput").on()
+            $("#editarFecha_AceptarButton").on("click",()=>{
+                editarFechaCheck();
+            });
+
+            $("#editarFecha_fechaInput").on("focus",()=>{
+                $("#editarFecha_fechaInput").click();
+            });
+
+            $("#editarHora_horaInput").keyup((evt)=>{
+                $("#editarHora_horaInput").click();
+            });
+
+            $("#editarFechaGrid_CreacionInput").change(()=>{
+                let data = $("#editarFechaGrid_CreacionInput")[0]["dataCustom"];
+                // let fecha = months
+                $("#grid_fechaCreacion_"+data.PK).val( $("#editarFechaGrid_CreacionInput").val() );
+
+            });
+
+            // $("#editarFecha_AceptarButton").on("click",()=>{
+                
+            // });
+
+            // $('#modalEditarFechaGrid.timepicker').timepicker('open',()=>{
+            //     alert("A");
+            //     $("#editarHora_horaInput").focus();
+            //     $("#editarFecha_fechaInput").focus();
+            //     $("#editarFecha_fechaInput").focusout();
+            // });
+
+            // $("#modalEditarFechaGrid").on("open",()=>{
+            //     alert("A");
+            //     $("#editarHora_horaInput").focus();
+            //     $("#editarFecha_fechaInput").focus();
+            //     $("#editarFecha_fechaInput").focusout();
+            // });
+            
+
+
+            // $("#getFechaInput").on()
 
             // $("#modalMostrarModulo_delete").on("focus",()=>{
             //     alert("s");

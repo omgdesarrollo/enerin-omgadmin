@@ -6,8 +6,8 @@ inicializarFiltros = ()=>
             { name: "N°",id:"no", type: "none" },
             { name: "",id:"nombre", type: "text" },
             { name: "",id:"descripcion", type: "text" },
-            { name: "",id:"creacion", type: "date" },
-            { name: "",id:"actualizacion", type: "date" },
+            { name: "",id:"creacion", type: "none" },
+            { name: "",id:"actualizacion", type: "none" },
             { name: "",id:"modulo", type: "none" },
             {name:"opcion",id:"opcion",type:"opcion"}
         ];
@@ -74,20 +74,22 @@ reconstruir = (value,index)=>
     // tempData += '<h6 class="green-text accent-4 truncate lowered">'+value.nombre+'</h6></div></div></div>';
 
     let tempData = new Object();
+    tempData["delete"] = [];
     tempData["no"] = index;
     tempData["PK"] = value.pk;
     tempData["nombre"] = value.nombre;
     tempData["descripcion"] = value.descripcion;
     tempData["creacion"] = value.creacion;
     tempData["actualizacion"] = value.actualizacion;
+
     tempData["modulos"] = "<button onclick='construirModulosProyecto("+JSON.stringify(value)+")'";
     tempData["modulos"] += 'type="button" class="modal-trigger" href="#modalMostrarModulos" style="border:none;background:transparent;cursor:pointer">';
     tempData["modulos"] += '<i class="material-icons blue-text small">view_module</i></button>';
     // tempData["modulos"] = '<button type="button" title="Recargar Datos" class="btn waves-effect waves-light light-blue darken-3 hoverable btn_filter" onclick="refresh();"><i class="material-icons">view_module</i></button>';
     // tempData["responsable"] = value.responsable;//Agrear al DAO
-    tempData["delete"] = [];
+    
     tempData["delete"].push({pk:tempData["PK"]});
-    tempData["delete"].push({eliminar:1});
+    value.modulos.length==0? tempData["delete"].push({eliminar:1}) : tempData["delete"].push({eliminar:0});
     tempData["delete"].push({editar:1});
     return  tempData;
 }
@@ -459,6 +461,86 @@ editarModulo = (data)=>
 preguntarEliminar = (data)=>
 {
     console.log(data);
+    // swal({
+    //     title: "",
+    //     text: "¿Eliminar Evidencia?",
+    //     type: "info",
+    //     showCancelButton: true,
+    //     closeOnConfirm: false,
+    //     showLoaderOnConfirm: true,
+    //     confirmButtonText: "Eliminar",
+    //     cancelButtonText: "Cancelar",
+    //     },
+    //     function(confirmacion)
+    //     {
+    //         if(confirmacion)
+    //         {
+    //             eliminarProyecto(data.PK);
+    //         }
+    //     });
+    swal({
+        title: "",
+        text: "¿Eliminar Servicio?",
+        type: "question",
+        showCancelButton: true,
+        // closeOnConfirm: false,
+        // showLoaderOnConfirm: true,
+        confirmButtonText: "Eliminar",
+        cancelButtonText: "Cancelar",
+        }).then((confirmacion)=>{
+            // console.log(confirmacion);
+            if(confirmacion["value"]!=undefined)
+            {
+                // console.log(data);
+                eliminarProyecto(data.pk);
+            }
+        });
+    $(".swal2-popup").css("font-size","initial");
+}
+
+eliminarProyecto = (PK)=>
+{
+    $.ajax({
+        url: '../Controller/ProyectosController.php?Op=EliminarProyecto',
+        type: 'POST',
+        data: 'PK='+PK,
+        success:function(eliminado)
+        {
+            if(eliminado>0)
+            {
+                dataListadoTemp=[];
+                dataItem = [];
+                numeroEliminar=0;
+                itemEliminar={};
+                $.each(dataListado,function(index,value)
+                {
+                    value.pk != PK ? dataListadoTemp.push(value) : (dataItem.push(value), numeroEliminar=index+1);//en el primer value.id_xxxx es el id por el cual se elimino la evidencia, id_evidencias es el que se recibe por parametro entrada
+                });
+                // itemEliminar = reconstruir(dataItem[0],numeroEliminar);
+                DataGrid = [];
+                dataListado = dataListadoTemp;
+                if(dataListado.length == 0 )
+                    ultimoNumeroGrid=0;
+                $.each(dataListado,function(index,value)
+                {
+                    DataGrid.push( reconstruir(value,index+1) );
+                });
+                gridInstance.loadData();
+                growlSuccess("Eliminar","Se elimino el proyecto");
+                // swal.close();
+            }
+            else
+            {
+                growlError("Error Eliminar","No se pudo eliminar el proyecto");
+                swal.close();
+            }
+        },
+        error:function()
+        {
+            growlError("Error Eliminar","Error en el servidor");
+            swal.close();
+        }
+    });
 }
 
 saveUpdateToDatabase = (args)=>
@@ -491,10 +573,11 @@ saveUpdateToDatabase = (args)=>
                     $.each(dataListado,(index,value)=>{
                         if(value["pk"] == PK)
                         {
-                            dataListado[index] = resp;
+                            dataListado[index] = resp[0];
                         }
                     })
                 ): growlError("Error Editar Proyecto","Se edito el proyecto pero fallo al mostrar en la vista") : growlError("Error Editar Proyecto","Error al editar el proyecto");
+                console.log(dataListado);
                 componerDataGrid();
                 gridInstance.loadData();
             },
@@ -513,27 +596,101 @@ saveUpdateToDatabase = (args)=>
     }
 }
 
-getFechaInput = (obj)=>
+editarFechaCheck = ()=>
 {
-    console.log($(obj));
-    let data = $(obj).val();
-    let btnDone = $("#getFechaID")[0]["M_Datepicker"]["doneBtn"];
-    $("#getFechaID").val("");
-    // data = data.split(" ");
-    // console.log($("#getFechaID")[0]["M_Datepicker"]);
-    // $("#getFechaID").val(data[0]);
-    $(btnDone).attr("onClick","getHoraInput("+obj+")");
-    $("#getFechaID").click();
+    let bandera = 0;
+    let mensajeError = "";
+    let time = "";
+    let hour = "";
+    let datosProyecto = new Object();
 
-    // $("#getFechaID")[0]["M_Datepicker"][""]
-    
-    // console.log($("#getFechaID")[0]["M_Datepicker"]["options"]["setDefaultDate"]=true);
+    datosProyecto["fecha"] = $("#editarFecha_fechaInput");
+    datosProyecto["hora"] = $("#editarHora_horaInput");
+
+    $.each(datosProyecto,(index,value)=>{
+        if(value.val().trim()=="")
+        {
+            bandera = 1;
+            mensajeError += "*"+value[0].labels[0].innerHTML+"\n";
+        }
+    });
+
+    try{
+        bandera==1? growlError("Campos Requeridos",mensajeError) :(
+            time = datosProyecto["hora"].val().split(":"),
+            hour = parseInt(time[0]),
+            hour = parseInt(time[1]),
+            hour = datosProyecto["hora"].val().split(":"),
+            time = datosProyecto["fecha"].val().split("-"),
+            new Date(time[0],time[1]-1,time[2],hour[0],hour[1]),
+            mandarDatosFechaActualizacion()
+        );
+    }catch(TypeError){
+        growlError("Error","Error Fecha Invalida");
+    };
 }
 
-getHoraInput = (a)=>
+// getFechaInput = (obj)=>
+// {
+//     console.log($(obj));
+//     let data = $(obj).val();
+//     let btnDone = $("#getFechaID")[0]["M_Datepicker"]["doneBtn"];
+//     $("#getFechaID").val("");
+//     // data = data.split(" ");
+//     // console.log($("#getFechaID")[0]["M_Datepicker"]);
+//     // $("#getFechaID").val(data[0]);
+//     $(btnDone).attr("onClick","getHoraInput("+obj+")");
+//     $("#getFechaID").click();
+
+//     // $("#getFechaID")[0]["M_Datepicker"][""]
+    
+//     // console.log($("#getFechaID")[0]["M_Datepicker"]["options"]["setDefaultDate"]=true);
+// }
+
+// getHoraInput = (a)=>
+// {
+//     // let hour = data.split(" ")[1];
+//     let hour = $("#getFechaID").val();
+//     // hour !="" ? console.log(hour):  ;
+//     console.log(a);
+// }
+
+// grid_fechaActualizacion_
+// modalEditarFechaGrid
+mandarDatosFechaActualizacion = ()=>
 {
-    // let hour = data.split(" ")[1];
-    let hour = $("#getFechaID").val();
-    // hour !="" ? console.log(hour):  ;
-    console.log(a);
+    let data = $("#modalEditarFechaGrid")[0]["dataCustom"];
+    let fecha = $("#editarFecha_fechaInput").val();
+    let hora = $("#editarHora_horaInput").val();
+    $("#grid_fechaActualizacion_"+data["PK"]).val(fecha+" "+hora+":00");
+    $("#modalEditarFechaGrid.modal").modal("close");
+}
+
+gridFechaEditarProyecto = (obj)=>
+{
+    $("#editarFechaGrid_CreacionInput").click();
+    // console.log( $("#editarFechaGrid_CreacionInput") );
+    // let btnDone = $("#editarFechaGrid_CreacionInput")[0]["M_Datepicker"]["doneBtn"];
+    // console.log( $("#editarFechaGrid_CreacionInput")[0]["M_Datepicker"]["doneBtn"] );
+    // $(btnDone).attr("onClick"," let obj = "+obj+"; $(obj).val( $('#editarFechaGrid_CreacionInput').val() )");
+}
+
+// openModalEditarFechaGrid = ()=>
+// {
+//     alert("A");
+//     $("#editarHora_horaInput").focus();
+//     $("#editarFecha_fechaInput").focus();
+//     // $("#editarFecha_fechaInput").focusout();
+// }
+
+refresh = ()=>
+{
+    inicializarFiltros().then((resolve2)=>
+    {
+        construirFiltros();
+        listarDatos();
+    },(error)=>
+    {
+        growlError("Error!","Error al construir la vista, recargue la página");
+    });
 }

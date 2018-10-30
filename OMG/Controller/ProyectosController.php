@@ -57,12 +57,19 @@ switch ($Op) {
     case "EditarProyecto":
         header('Content-type: application/json; charset=utf-8');
         $datos = json_decode($_REQUEST["datos"],true);
-        $exito = $model->editarProyecto($datos);
-        if($exito >= 0)
+        $Lista = $model->editarProyecto($datos);
+        if($Lista >= 0)
         {
             $Lista = $model->listarProyecto($datos["PK"]);
-            echo json_encode($Lista);
         }
+        echo json_encode( $Lista );
+    break;
+
+    case "EliminarProyecto":
+        // header('Content-type: application/json; charset=utf-8');
+        // $datos = json_decode($_REQUEST["datos"],true);
+        $exito = $model->eliminarProyecto($_REQUEST["PK"]);
+        // echo json_encode( $exito );
         echo $exito;
     break;
     

@@ -131,5 +131,18 @@ class ProyectoDAO{
                 return -1;
             }
     }
+
+    public function eliminarProyecto($baseAdmin,$PK)
+    {
+        try{
+            $query="DELETE FROM proyecto WHERE pk = $PK";
+            $db =  AccesoDB::getInstancia($baseAdmin);
+            $exito = $db->executeUpdateRowsAfected($query);
+            return $exito;
+            } catch (Exception $e){
+                throw $e;
+                return -1;
+            }
+    }
 }
 ?>
