@@ -19,81 +19,30 @@
         <script type="text/javascript" src="../../assets/materialize/js/materialize.min.js"></script>
 
         <script src="../../js/fechas_formato.js" type="text/javascript"></script>
-        <script src="../../js/is.js" type="text/javascript"></script>
 
         <script src="../../js/proyectoView.js" type="text/javascript"></script>
         <script src="../../js/fGridComponent.js" type="text/javascript"></script>
 
         <style>
+            /* no uso */
             .collapsible
             {
                 /* margin:10px 0 0 10px; */
                 border:none;
             }
+
+            /* contenedor de modulos */
             .card
             {
                 min-height:45px;
                 max-height:45px;
             }
+            /* contenedor de modulos no se usa */
             .card-action 
             {
-                /* height:40px; */
                 padding:0px !important;
                 text-align:center;
             }
-            h6
-            {
-                text-transform: uppercase;
-            }
-            /* i{
-                font-size:-webkit-xxx-large !important;
-            }version pro */
-            .tooltip-content
-            {
-                text-align:left;
-            }
-            .prefix.active
-            {
-                color: #3399cc !important;
-            }
-            label.active
-            {
-                color: #3399cc !important;
-            }
-            #modal_contentID
-            {
-                height:420px;
-            }
-            .datepicker-modal
-            {
-                top: 0px !important;
-            }
-            a:hover
-            {
-                font-size:20px !important;
-            }
-            #jGrowl
-            {
-                height:50%;
-                bottom:50%;
-            }
-            input.select-dropdown
-            {
-                width:85px !important;
-            }
-            
-
-
-            /* .modal-content-datepicker-container
-            {
-                min-height:200px !important;
-            } */
-            /* @media only screen and (min-width:1200px){
-                a
-                {
-                    font-size:16px;
-                }
-            } */
         </style>
     </head>
     <body>
@@ -120,17 +69,20 @@
         </ul> -->
         <!-- <div id="headerOpciones" class="row" style="position:fixed;width:100%;margin: 10px 0px 0px 0px;padding: 0px 25px 0px 5px;"></div> -->
         <!-- <div class="row"> -->
+        
+        <!-- BOTONES DE HERRAMIENTAS -->
         <div id="headerOpciones" style="position:fixed;width:100%;margin: 10px 0px 0px 0px;padding: 0px 0px 0px 5px;">
             <button type="button" class="waves-effect waves-light hoverable btn modal-trigger" href="#modalAgregarProyecto">
                 Nuevo Proyecto
             </button>
         </div>
         <br><br><br><br><rb>
+        <!-- JSGRID-->
         <div id="jsGrid"></div>
         <!-- <div id="proyectoListado" class="row"></div>//version plus -->
         
-        <!-- agregar Proyecto-->
-        <div id="modalAgregarProyecto" class="modal" style="min-height:auto">
+        <!-- AGREGAR PROYECTO-->
+        <div id="modalAgregarProyecto" class="modal" style="min-height:auto;">
             <div id="modal_contentID" class="modal-content">
                 <div class="row">
                     <div class="input-field col s12 light-blue-text text-darken-3">
@@ -187,7 +139,7 @@
             </div>
         </div>
 
-        <!-- AGREGAR MODULO -->
+        <!-- EDITAR MODULO -->
         <div id="modalEditarModulo" class="modal modal-fixed-footer" style="min-height:auto">
             <div id="modal_contentID" class="modal-content center-align">
                 <h6>EDITAR MODULO</h6>
@@ -215,18 +167,19 @@
 
         <!-- MOSTRAR MODULOS -->
         <div id="modalMostrarModulos" class="modal bottom-sheet modal-fixed-footer">
-        <div class="modal-content" style="padding-bottom:0px">
-            <h5 id="modalMostrarModulos_title"></h5>
-            <div id="modalMostrarModulos_content" class="row"></div>
-        </div>
-        <div class="modal-footer">
-            <a class="btn-flat grey-text lighten-1" ondragover='dragover(event)' ondrop="drop(event)" style="cursor:default"><i id="modalMostrarModulo_delete" class="material-icons">delete_forever</i></a>
-            <!-- <a id="modalMostrarModulo_delete" class="waves-effect waves-red btn-flat red-text" ondragover='allowDrop(event)' ondrop="drop(event)"><i class="material-icons">delete_forever</i></a> -->
-            <a class="modal-close waves-effect waves-red btn-flat red-text">Cerrar</a>
-        </div>
+            <div class="modal-content" style="padding-bottom:0px">
+                <h5 id="modalMostrarModulos_title"></h5>
+                <div id="modalMostrarModulos_content" class="row"></div>
+            </div>
+
+            <div class="modal-footer">
+                <a class="btn-flat grey-text lighten-1" ondragover='dragover(event)' ondrop="drop(event)" style="cursor:default"><i id="modalMostrarModulo_delete" class="material-icons">delete_forever</i></a>
+                <!-- <a id="modalMostrarModulo_delete" class="waves-effect waves-red btn-flat red-text" ondragover='allowDrop(event)' ondrop="drop(event)"><i class="material-icons">delete_forever</i></a> -->
+                <a class="modal-close waves-effect waves-red btn-flat red-text">Cerrar</a>
+            </div>
         </div>
 
-        <!-- CAMBIAR FECHA Y HORA GRID -->
+        <!-- CAMBIAR FECHA Y HORA ACTUALIZACION GRID -->
         <div id="modalEditarFechaGrid" class="modal" style="min-height:auto">
             <div id="modal_contentID" class="modal-content center-align">
                 <h6>CAMBIAR FECHA ACTUALIZACIÓN</h6>
@@ -255,22 +208,23 @@
             </div>
         </div>
 
+        <!-- VCAMBIAR FECHA CREACION GRID -->
         <input id="editarFechaGrid_CreacionInput" type="text" class="datepicker" style="display:none"></input>
     </body>
     <script>
-        var DataGrid=[];//grid
-        var dataListado=[];//grid
-        var filtros=[];//grid
+        var DataGrid=[];//grid datos del grid
+        var dataListado=[];//grid datos del servidor, usado en el filtro
+        var filtros=[];//grid busqueda de datos
         var db={};//grid
-        var gridInstance;//grid
-        var ultimoNumeroGrid=0;//grid
+        var gridInstance;//grid objecto para acceder a valor y funciones del objecto grid
+        var ultimoNumeroGrid=0;//grid contador para la numeracion del grid y usado en eliminacion
 
         var MyDateField = function(config)
         {
             jsGrid.Field.call(this, config);
         };
  
-        MyDateField.prototype = new jsGrid.Field
+        MyDateField.prototype = new jsGrid.Field//campo personalizado para el grid, formato de fecha
         ({
             css: "date-field",
             align: "center",
@@ -312,7 +266,7 @@
             jsGrid.Field.call(this, config);
         };
  
-        MyDateTimeField.prototype = new jsGrid.Field
+        MyDateTimeField.prototype = new jsGrid.Field//campo personalizado para el grid, formato de fecha y hora en modal externo
         ({
             css: "date-field",
             align: "center",
@@ -320,13 +274,14 @@
             {},
             itemTemplate: function(value)
             {
+                // console.log("AA",value);
                 return getFechaFormatoH(value);
             },
             insertTemplate: function(value)
             {},
             editTemplate: function(value,data)
             {
-                console.log(data);
+                // console.log("AA",data);
                 let time = data.actualizacion.split(" ");
                 fecha="0000-00-00 00:00:00";
                 if(value!=fecha)
@@ -340,7 +295,7 @@
             },
             insertValue: function()
             {},
-            editValue: function(val)
+            editValue: function()
             {
                 value = this._inputDate[0].value;
                 if(value=="")
@@ -350,13 +305,13 @@
             }
         });
 
-        var customsFieldsGridData=[
-            {field:"customControl",my_field:MyCControlField},
+        var customsFieldsGridData=[//lista para guardar los campos personalizados del grid
+            {field:"customControl",my_field:MyCControlField},//campo por defecto para las opciones de edicion y eliminacion
             {field:"date",my_field:MyDateField},
             {field:"dateTime",my_field:MyDateTimeField},
         ];//grid
 
-        estructuraGrid = [
+        estructuraGrid = [//estructura que llevara la visualizacion del grid
             { name: "PK",visible:false},
             { name: "no", title:"N°", type: "text", width: 60, editing:false},
             { name: "nombre", title:"Nombre Proyecto", type: "text", width: 160},
@@ -367,20 +322,19 @@
             { name:"delete", title:"Opción", type:"customControl",sorting:""},
         ];//grid
 
-        construirGrid();//grid
-        // gridInstance.loadData();
+        construirGrid();//funcion para construir el grid visualmente
 
-        inicializarFiltros().then((resolve2)=>
+        inicializarFiltros().then((resolve2)=>//funcion promesa para crear la estructura de los campos del filtro
         {
-            construirFiltros();
-            listarDatos();
-        },(error)=>
+            construirFiltros();//funcion para contruir los campos de filtro en el grid
+            listarDatos();//listar los datos del servidor y base de datos a la vista para el grid
+        },(error)=>//en caso de error en la promesa "inicializarFiltros"
         {
             growlError("Error!","Error al construir la vista, recargue la página");
         });
 
         $(document).ready(function(){
-            $('.modal').modal({dismissible:false});
+            $('.modal').modal({dismissible:false});//inicializacion del objeto modal de materialize
             // $("#modalEditarFechaGrid.modal").modal({dismissible:false,options:{
             //     onOpenEnd:()=>{
             //         alert("A");
@@ -391,24 +345,20 @@
             // $('.tooltipped').tooltip();
         //     $('.collapsible').collapsible();
 
-            //Version plus
-            // $('.modal').modal();
-            $('.timepicker').timepicker({twelveHour:false});
+            $('.timepicker').timepicker({twelveHour:false});//inicializacion del objecto de modal de seleccion de hora de materialize
             
-            $('.datepicker').datepicker({format:"yyyy-mm-dd",i18n:{cancel:"DESCARTAR",months:monthsLarge,monthsShort:months,weekdays:weekdays,weekdaysAbbrev:weekdaysAbrev,weekdaysShort:weekdaysCorto} });
-            // months
-            // weekdays
-            // monsthLarge
-            $('textarea').characterCounter();
+            $('.datepicker').datepicker({format:"yyyy-mm-dd",i18n:{cancel:"DESCARTAR",months:monthsLarge,monthsShort:months,weekdays:weekdays,weekdaysAbbrev:weekdaysAbrev,weekdaysShort:weekdaysCorto} });//inicializacion del objecto de modal de seleccion de fechas de materialize
+            
+            $('textarea').characterCounter();//inicializacion para la etiqueta de textarea para contador de caracteres sobre el campo
         });
 
-        var navegacionCrumb = $(window.parent)[0].getElement_navegacionCrumb();
-        var divIframe = $(window.parent)[0].getDivIframe();
+        // var navegacionCrumb = $(window.parent)[0].getElement_navegacionCrumb();
+        // var divIframe = $(window.parent)[0].getDivIframe();
         // var instanceTooltip;//version plus
 
         $(()=>{
 
-            $("#agregarProyectoInput").on("click",()=>{
+            $("#agregarProyectoInput").on("click",()=>{//funcion para comprobar si los campos no estan vacios antes de agregar un proyecto
                 let bandera = 1;
                 let mensajeError = "";
                 let datosProyecto = new Object();
@@ -428,12 +378,12 @@
                     growlError("Campos Requeridos",mensajeError):agregarProyecto(datosProyecto);
             });
 
-            $("#fechaProyectoInput").on("focus",()=>{
-                $("#fechaProyectoInput").click();
+            $("#fechaProyectoInput").on("focus",()=>{//funcion ejecutada al ganar el foco el campo de fecha en el modal de agregar proyecto
+                $("#fechaProyectoInput").click();//abre el modal de seleccion de fecha
             });
 
-            $("#agregarModulo_nombreInput , #agregarModulo_descripcionInput").keypress((evt)=>{
-                if(evt.which == 13)
+            $("#agregarModulo_nombreInput , #agregarModulo_descripcionInput").keypress((evt)=>{//funcion cuando se presiona una tecla en los campos del modal agregar modulo ejecuta el codigo...
+                if(evt.which == 13)//comprueba si la tecla oprimida sea "ENTER"
                     agregarModuloCheck();
             });
 
@@ -449,17 +399,16 @@
                 editarFechaCheck();
             });
 
-            $("#editarFecha_fechaInput").on("focus",()=>{
-                $("#editarFecha_fechaInput").click();
+            $("#editarFecha_fechaInput").on("focus",()=>{//funcion ejecutada al ganar el foco el campo de fecha en el modal de editar proyecto
+                $("#editarFecha_fechaInput").click();//auto click
             });
 
-            $("#editarHora_horaInput").keyup((evt)=>{
-                $("#editarHora_horaInput").click();
+            $("#editarHora_horaInput").keyup((evt)=>{//funcion ejecutada al presionar una tecla en el campo de hora en el modal de editar proyecto
+                $("#editarHora_horaInput").click();//auto click
             });
 
-            $("#editarFechaGrid_CreacionInput").change(()=>{
+            $("#editarFechaGrid_CreacionInput").change(()=>{//funcion que al cambiar el valor del campo intermediario para el valor de fecha creacion del grid
                 let data = $("#editarFechaGrid_CreacionInput")[0]["dataCustom"];
-                // let fecha = months
                 $("#grid_fechaCreacion_"+data.PK).val( $("#editarFechaGrid_CreacionInput").val() );
 
             });
@@ -508,7 +457,7 @@
             // });
         });
 
-        $(navegacionCrumb).html("<a onclick='abrirProyectos()' class='breadcrumb'>Proyectos</a>");
+        // $(navegacionCrumb).html("<a onclick='abrirProyectos()' class='breadcrumb'>Proyectos</a>");
 
         // var cardAgregarProyecto = '<div class="col s4 m3 l2 xl2">';
         // cardAgregarProyecto += '<div style="width:100%" href="#modal1" class="waves-effect waves-omg card hoverable modal-trigger" draggable="true" style="cursor:pointer">';
@@ -517,10 +466,12 @@
         // cardAgregarProyecto += '<div class="card-action">';
         // cardAgregarProyecto += '<h6 class="blue-text truncate">AGREGAR PROYECTO</h6></div></div></div>';
 
-        var select = -1;//version plus
-        var style_modalMostrarModulo_delete;
-        function allowDrop(ev,id){//version plus
-            // console.log(1);
+
+        // drag and drop
+        var select = -1;//id del elemento seleccionado
+        var style_modalMostrarModulo_delete;//estilo origial del elemento selecionado
+        allowDrop = (ev,id)=>//al seleccionar para mover el elemento
+        {
             if(select == -1)
             {
                 style_modalMostrarModulo_delete = $("#modalMostrarModulo_delete").css("font-size");
@@ -530,21 +481,20 @@
             $("#modalMostrarModulo_delete").css("color","red");
         }
 
-        function dragover(ev)
+        dragover = (ev)=>//al mover el elemento
         {
-            // console.log(2);
             ev.preventDefault();
         }
 
-        function drag(ev){//version plus
-            // console.log(3);
+        drag = (ev)=>//al soltar el elemento
+        {
             select = -1;
             $("#modalMostrarModulo_delete").css("font-size",style_modalMostrarModulo_delete);
             $("#modalMostrarModulo_delete").css("color","");
         }
 
-        function drop(ev) {//version plus
-            // console.log(4);
+        drop = (ev)=>//al soltar el elemento sobre un elemento especifico
+        {
             ev.preventDefault();
             $("#cardModulo_"+select)[0]["eliminarFnCustom"][0](select);
         }

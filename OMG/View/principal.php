@@ -22,6 +22,8 @@
         <link href="../../assets/vendors/jGrowl/jquery.jgrowl.css" rel="stylesheet" type="text/css"/>
         <script src="../../assets/vendors/jGrowl/jquery.jgrowl.js" type="text/javascript"></script>
 
+        <script src="../../assets/swal/sweetalert2.all.min.js" type="text/javascript"></script>        
+
         <link href="../../assets/googleApi/icon.css" rel="stylesheet">
         <link type="text/css" rel="stylesheet" href="../../assets/materialize/css/materialize.min.css"  media="screen,projection"/>
         <script type="text/javascript" src="../../assets/materialize/js/materialize.min.js"></script>
@@ -47,6 +49,14 @@
             .blue-text
             {
                 color: #3399cc !important;
+            }
+            .green-text
+            {
+                color: #26a69a !important;
+            }
+            .green-text2
+            {
+                color: #26a69a !important;
             }
             .sidenav li>a
             {
@@ -74,6 +84,14 @@
             a.brand-logo
             {
                 font-size:18px;
+            }
+
+            .no-active
+            {
+                pointer-events:none;
+                cursor:default;
+                text-decoration:none;
+                color: #26a69a !important;
             }
             /* header, main, footer
             {
@@ -160,16 +178,19 @@
                 <!-- </a> -->
                         <ul id="nav-mobile" class="right">
                             <li>
-                                <a id="cerrarSesion" class="waves-effect waves-omg flow-text" href="#!"><i class="material-icons blue-text">exit_to_app</i></a>
+                                <a id="cerrarSesion" class="waves-effect waves-omg flow-text tooltipped" data-tooltip="USUARIO" href="#!" ><i class="material-icons blue-text">account_box</i></a>
+                            </li>
+                            <li>
+                                <a id="cerrarSesion" class="waves-effect waves-omg flow-text tooltipped" data-tooltip="SALIR" href="#!" ><i class="material-icons blue-text">exit_to_app</i></a>
                             </li>
                         </ul>
-                        <a data-target="sidenav-left" class="sidenav-trigger left"><i class="material-icons black-text">menu</i></a>
+                        <a data-target="sidenav-left" class="sidenav-trigger left" style="cursor:pointer"><i class="material-icons black-text">menu</i></a>
                         <div id="navegacionCrumb"></div>
                 </div>
             </nav>
         </div>
         <ul id="sidenav-left" class="sidenav sidenav-fixed" style="width:270px">
-            <li><a class="logo-container" style="margin:8px;text-decoration:none">ADMINISTRACIÓN<i class="material-icons blue-text">flash_on</i></a></li>
+            <li><a class="logo-container no-active" style="margin:8px;text-decoration:none">ADMINISTRACIÓN<i class="material-icons green-text2">flash_on</i></a></li>
             <li><div class="divider"></div></li>
 
             <li>
@@ -178,23 +199,26 @@
             <li><div class="divider"></div></li>
 
             <li>
-                <a class="waves-effect waves-omg" href="#!"><i class="material-icons blue-text">supervisor_account</i>Responsables<i class="material-icons right">send</i></a>
+                <a id="fnViewClientes" class="waves-effect waves-omg" href="#!"><i class="material-icons blue-text">supervisor_account</i>Clientes<i class="material-icons right">send</i></a>
             </li>
             <li><div class="divider"></div></li>
 
             <li>
-                <a class="waves-effect waves-omg" href="#!"><i class="material-icons blue-text">people</i>Usuarios<i class="material-icons right">send</i></a>
+                <a id="fnViewEmpleados" class="waves-effect waves-omg" href="#!"><i class="material-icons blue-text">people</i>Empleados<i class="material-icons right">send</i></a>
             </li>
             <li><div class="divider"></div></li>
 
             <li>
-                <a class="waves-effect waves-omg" href="#!"><i class="material-icons blue-text">notifications</i>Notificaciones<i class="material-icons right">send</i></a>
+                <a id="fnViewNotificaciones" class="waves-effect waves-omg" href="#!"><i class="material-icons blue-text">notifications</i>Notificaciones<i class="material-icons right">send</i></a>
             </li>
             <li><div class="divider"></div></li>
 
             <li>
-                <a class="waves-effect waves-omg" href="#!"><i class="material-icons blue-text">cloud_upload</i>Mejoras<i class="material-icons right">send</i></a>
+                <a id="fnViewMejoras" class="waves-effect waves-omg" href="#!"><i class="material-icons blue-text">cloud_upload</i>Mejoras<i class="material-icons right">send</i></a>
             </li>
+            
+
+
         </ul>
         <div id="divIframe">
         </div>
@@ -203,36 +227,51 @@
         // $(document).ready(function(){
         //     $('.tabs').tabs();
         // });
-        var history;
-        console.log(window);
+        // var history;
+        // console.log(window);
         $(document).ready(function(){
             $('.sidenav').sidenav();
             $('.modal').modal();
+            $('.tooltipped').tooltip();
             windowTam = $(window).height();
             // alert(windowTam);
             $("#divIframe").css("height",(windowTam-70)+"px");
         });
 
-        $(()=>{            
+        $(()=>{
             // $(".btn-menu").click((t)=>{
             //     $(".btn-menu").css("background","transparent");
             //     $(t.currentTarget).css("background","burlywood");
             // });
-        });
+            $("#cerrarSesion").on("click",()=>{
+                cerrarSesion();
+            });
 
-        $("#cerrarSesion").on("click",()=>{
-            cerrarSesion();
-        });
+            $("#fnViewProyectos").on("click",(obj)=>{
+                cambioMenu(obj);
+                abrirProyectos();
+            });
 
-        $("#fnViewProyectos").on("click",()=>{
-            abrirProyectos();
-        });
+            $("#fnViewClientes").on("click",(obj)=>{
+                cambioMenu(obj);
+                abrirClientes();
+            });
+            
+            $("#fnViewEmpleados").on("click",(obj)=>{
+                cambioMenu(obj);
+                abrirEmpleados();
+            });
 
-        cerrarSesion = ()=>
-        {
-            window.location = "Logout.php";
-            // console.log(window);
-        }
+            $("#fnViewNotificaciones").on("click",(obj)=>{
+                cambioMenu(obj);
+                abrirNotificaciones();
+            });
+
+            $("#fnViewMejoras").on("click",(obj)=>{
+                cambioMenu(obj);
+                abrirMejoras();
+            });
+        });
 
         
     </script>

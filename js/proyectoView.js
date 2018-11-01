@@ -145,8 +145,8 @@ construirModulosProyecto = (data)=>
     cardAgregarModulo += '<div onclick="bloquearModalMostrarModulos(1)" style="width:100%;background:#26a69a" href="#modalAgregarModulo" class="waves-effect waves-light white-text card hoverable modal-trigger" style="cursor:pointer">';
     cardAgregarModulo += '<div class="card-image center-align flow-text">';
     cardAgregarModulo += '</div>';
-    cardAgregarModulo += '<div class="row center-align" style="margin-bottom:0px"><div class="col s3" style="margin-top:10px"><i class="material-icons white-text">create_new_folder</i></div>';
-    cardAgregarModulo += '<div class="col s9 valign-wrapper" style="min-height:45px;max-height:45px;">AGREGAR MODULO</div></div></div></div>';
+    // cardAgregarModulo += '<div class="row center-align" style="margin-bottom:0px"><div class="col s3" style="margin-top:10px"></div>';
+    cardAgregarModulo += '<div class="col s9 valign-wrapper" style="min-height:45px;max-height:45px;"><i class="material-icons white-text left">create_new_folder</i>AGREGAR MODULO</div></div></div></div>';
     let tempData="";
     // console.log(data);
     $.each(data.modulos,(index,value)=>{
@@ -157,8 +157,8 @@ construirModulosProyecto = (data)=>
         tempData += "<div ondblclick='editarModuloAccion(this)' id='cardModulo_"+value.pk+"' style='width:100%;background:powderblue;' ondragstart='allowDrop(event,"+value.pk+")' ondragend='drag(event)' ondragover='dragover(event)' ";
         tempData += "class='waves-effect waves-omg card hoverable tooltipped' data-tooltip='"+value.descripcion+"' draggable='true' style='cursor:pointer'>";
         tempData += '<div class="card-image center-align flow-text"></div>';
-        tempData += '<div class="row center-align" style="margin-bottom:0px"><div class="col s3" style="margin-top:10px"><i class="material-icons blue-text">extension</i></div>';
-        tempData += '<div class="col s9 valign-wrapper" style="min-height:45px;max-height:45px;">'+value.nombre+'</div></div></div></div>';
+        // tempData += '<div class="row center-align" style="margin-bottom:0px"><div class="col s3" style="margin-top:10px"><i class="material-icons blue-text">extension</i></div>';
+        tempData += '<div class="col s9 truncate" style="min-height:45px;max-height:45px;margin-0px;margin-top:10px;width:auto"><i class="material-icons blue-text left">extension</i>'+value.nombre+'</div></div></div></div>';
     });
     tempData+=cardAgregarModulo;
     // $("#modalMostrarModulos_footer").append(cardAgregarModulo);
@@ -460,7 +460,7 @@ editarModulo = (data)=>
 
 preguntarEliminar = (data)=>
 {
-    console.log(data);
+    // console.log(data);
     // swal({
     //     title: "",
     //     text: "¿Eliminar Evidencia?",
@@ -546,6 +546,7 @@ eliminarProyecto = (PK)=>
 saveUpdateToDatabase = (args)=>
 {
     console.log(args);
+    console.log("saveUpdatetodatabase");
     let columnas = new Object();
     let PK = args["item"]["PK"];
     $.each(args["item"],(index,value)=>{
