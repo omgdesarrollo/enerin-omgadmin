@@ -33,7 +33,7 @@
                 nuevo empleado
             </button>
         </div>
-        <br><br><br><br><rb>
+        <br><br><br>
         <!-- JSGRID-->
         <div id="jsGrid"></div>
         <!-- AGREGAR EMPLEADO -->
@@ -149,7 +149,6 @@
             $("#agregarEmpeladoBtn").click(()=>{
                 agregarEmpleadoCheck();
             });
-
         });
 
     </script>

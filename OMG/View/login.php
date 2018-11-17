@@ -134,7 +134,7 @@ if (Session:: existeSesion("usuarioOMG_ADMIN")){
     <footer class="page-footer grey valign-wrapper">
         <div class="container center-align truncate">
             <text-footer class="black-text">
-                  Copyright © 2018 - 2019 Javier M. Davila Bartoluchi
+                  2018
             </text-footer>
         </div>      
     </footer>

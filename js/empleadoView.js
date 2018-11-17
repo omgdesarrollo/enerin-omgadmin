@@ -335,3 +335,15 @@ saveUpdateToDatabase = (args)=>
         gridInstance.loadData();
     }
 }
+
+refresh = ()=>
+{
+    inicializarFiltros().then((resolve2)=>//funcion promesa para crear la estructura de los campos del filtro
+    {
+        construirFiltros();//funcion para contruir los campos de filtro en el grid
+        listarDatos();//listar los datos del servidor y base de datos a la vista para el grid
+    },(error)=>//en caso de error en la promesa "inicializarFiltros"
+    {
+        growlError("Error!","Error al construir la vista, recargue la página");
+    });
+}

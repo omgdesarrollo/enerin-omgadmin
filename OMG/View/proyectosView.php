@@ -76,7 +76,7 @@
                 Nuevo Proyecto
             </button>
         </div>
-        <br><br><br><br><rb>
+        <br><br><br>
         <!-- JSGRID-->
         <div id="jsGrid"></div>
         <!-- <div id="proyectoListado" class="row"></div>//version plus -->

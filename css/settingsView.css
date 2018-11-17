@@ -1,4 +1,4 @@
-/* body{overflow:hidden;} */
+body{overflow:hidden;}
 
 /* estilo de barra de desplazamiento para la pagina */
 ::-webkit-scrollbar{width: 8px;}

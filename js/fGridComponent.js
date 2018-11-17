@@ -71,72 +71,65 @@ inyectar_librerias();
 function lol()
 {
     var tam1A,tam2A;
-    Frame = $(this)[0].frameElement;
-    // $("#jsGrid").jsGrid("refresh");
-    // console.log($(window.parent).height());
-    if($(window.parent).height()<720)
+    let fr = $(this)[0].frameElement; 
+    Frame = $(fr).parent();
+    if($(window.parent).height()<660)
     {
-        tam1A = 740 - 190;
-        tam2A = tam1A - 42;
-        $(Frame).css("height",tam2A-6+"px");
-        $("#jsGrid").css("height","390px");
-        gridInstance.height = 390 + "px";
+        // let tm1 = $(window.parent).height();
+        $(Frame).css("height",660-70+"px");
+
+        $("#jsGrid").css("height","584px");
+        gridInstance.height = "584px";
         let val = $('.jsgrid-filter-row').css("display");
         if(val != "none")
         {
-            gridInstance._body[0].style.height = 260 +"px";
-            $(".jsgrid-grid-body").css("height", 260 + "px");
+            gridInstance._body[0].style.height = 376 +"px";
+            $(".jsgrid-grid-body").css("height", 376 + "px");
         }
         else
         {
-            gridInstance._body[0].style.height = 318.8 +"px";
-            $(".jsgrid-grid-body").css("height", 318.8 +"px");
+            gridInstance._body[0].style.height = 441 +"px";
+            $(".jsgrid-grid-body").css("height", 441 +"px");
         }
         $(".jsgrid-pager-container").css({
-            top: 465 + "px",
+            top: "540px",
             position:"fixed",
+            display:"",
             // left:(leftT/2)-(tamPager/2)
             left:20
         });
     }
     else
     {
-        tam1A = $(window.parent).height() - 190;
-        tam2A = tam1A - 42;
-        $(Frame).css("height",tam2A-6+"px");
-        t = $(window.parent).height() - 718;
+        tam1A = $(window.parent).height();
+        tam2A = tam1A - 70;
+        $(Frame).css("height",tam2A+"px");
+        let tam = $(Frame).height();
+        t = $(window.parent).height() - 720;
 
-        $("#jsGrid").css("height", t + 380 +"px");
-        gridInstance.height = t + 380 + "px";
+        $("#jsGrid").css("height", tam-65 +"px");
+        gridInstance.height = tam-65 + "px";
 
         let val = $('.jsgrid-filter-row').css("display");
         if(val != "none")
         {
-            $(".jsgrid-grid-body").css("height", (t + 235) + "px");
-            gridInstance._body[0].style.height = (t + 235) +"px";
+            $(".jsgrid-grid-body").css("height", (tam - 215 ) + "px");
+            gridInstance._body[0].style.height = (tam - 215) +"px";
         }
         else
         {
-            $(".jsgrid-grid-body").css("height", (t + 293.8) +"px");
-            gridInstance._body[0].style.height = (t + 293.8) +"px";
+            $(".jsgrid-grid-body").css("height", (tam - 151) +"px");
+            gridInstance._body[0].style.height = (tam - 151) +"px";
         }
         $(".jsgrid-pager-container").css({
-            top: t + 445 + "px",
+            top: tam - 46 + "px",
             position:"fixed",
+            display:"",
             // left:(leftT/2)-(tamPager/2)
             left:20
         });
-        // console.log($(".jsgrid-grid-body"));
-        // gridInstance._body[0].style.height = t + 210 +"px";
-        // gridInstance._body[0].style.height = "max-container";
-        // gridInstance._body[0].style.height = 80 +"%";
-        
-        // $(".jsgrid-grid-body").css("height", t + 210 +"px");
-        // console.log(gridInstance);
-        // $(".jsgrid-grid-body").css("height",($(window.parent).height() - 720 + 215) +"px");
         
     }
-    // console.log("Reconstruir tamaños");
 }
 
 $(window.parent).resize(()=>{
@@ -209,7 +202,7 @@ function construirGrid()
             // alert("3");
             // setTimeout(function(){lol();},200);
             $('.jsgrid-filter-row').removeAttr("style",'display:none');
-            // setTimeout(()=>{lol();},100);
+            setTimeout(()=>{lol();},100);
             // $(".jsgrid-grid-body").attr("style","height:53.44228935%");
             // $(window.parent).resizeTo($(window.parente).width(),$(window.parente).height()-200);
             // this.resizeTo($(window.parente).width(),$(window.parente).height()-200);
