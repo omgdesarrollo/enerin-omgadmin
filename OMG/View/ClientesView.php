@@ -48,7 +48,7 @@
                 </div>
 
                 <div class="row">
-                    <div class="input-field col s12 m12 l12 xl2 light-blue-text text-darken-3">
+                    <div class="input-field col s12 m12 l12 xl12 light-blue-text text-darken-3">
                         <input id="nombreCompletoClienteInputAdd" type="text" class="autocomplete">
                         <label for="nombreCompletoClienteInputAdd">NOMBRE COMPLETO</label>
                     </div>
@@ -165,11 +165,11 @@
             { name: "PK",visible:false},
             { name: "fk_empleado",visible:false },
             { name: "no", title:"N°", type: "text", width: 60, editing:false},
-            { name: "nombre_corto", title:"Nombre Corto", type: "text", width: 160},
+            { name: "nombre_corto", title:"Nombre Corto", type: "text", width: 150},
             { name: "nombre_completo", title:"Nombre Completo", type: "text", width: 180},
-            { name: "fecha_inicio",title:"Fecha Inicio", type:"date", width:170,},
-            { name: "fecha_termino", title:"Fecha Termino", type: "dateTime", width: 170},
-            { name: "responsable", title:"Responsable", type: "text", width: 80, editing:false},
+            { name: "fecha_inicio",title:"Fecha Inicio", type:"date", width:160},
+            { name: "fecha_termino", title:"Fecha Termino", type: "dateTime", width: 160},
+            { name: "responsable", title:"Responsable", type: "text", width: 170, editing:true},
             { name:"delete", title:"Opción", type:"customControl",sorting:""},
         ];
 

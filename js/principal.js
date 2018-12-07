@@ -73,3 +73,19 @@ cerrarSesion = ()=>
     $(".swal2-popup").css("font-size","initial");
     // console.log(window);
 }
+
+abrirInfoUSuario = ()=>
+{
+    swal({
+        title: "",
+        text: "EN CONSTRUICCIÓN ;)",
+        type: "info",
+        showCancelButton: true,
+        confirmButtonText: "OK",
+        cancelButtonText: "OK",
+        }).then((confirmacion)=>{
+            if(confirmacion["value"]!=undefined)
+            {}
+        });
+        $(".swal2-popup").css("font-size","initial");
+}

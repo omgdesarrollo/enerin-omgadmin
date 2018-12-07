@@ -5,7 +5,7 @@ inicializarFiltros = ()=>
         filtros = [
             { name: "N°",id:"no", type: "none" },
             { name: "",id:"nombre_corto", type: "text" },
-            { name: "",id:"nombre_Completo", type: "text" },
+            { name: "",id:"nombre_completo", type: "text" },
             { name: "",id:"fecha_inicio", type: "none" },
             { name: "",id:"fecha_termino", type: "none" },
             { name: "",id:"responsable", type: "none" },
@@ -37,7 +37,7 @@ listarDatos = () =>
                         growlSuccess("Datos Obtenidos","Clientes");
                     }
                     else
-                        growlSuccess("Sin Datos","Empleados");
+                        growlSuccess("Sin Datos","Clientes");
                     $.each(data,(index,value)=>{
                         tempData.push( reconstruir(value,index+1) );
                     });
@@ -64,9 +64,11 @@ reconstruir = (value,index)=>
     tempData["delete"] = [];
     tempData["no"] = index;
     tempData["PK"] = value.pk;
-    tempData["nombre"] = value.nombre;
-    tempData["apellidos"] = value.apellidos;
-    tempData["email"] = value.email;
+    tempData["nombre_corto"] = value.nombre_corto;
+    tempData["nombre_completo"] = value.nombre_completo;
+    tempData["fecha_inicio"] = value.fecha_inicio;
+    tempData["fecha_termino"] = value.fecha_termino;
+    tempData["responsable"] = value.responsable;
 
     // tempData["usuario"] = value.usuario == null? '<a'+" onclick='pasarDatosAgregarUsuario("+JSON.stringify(value)+")'"+' id="cerrarSesion" class="waves-effect waves-omg flow-text modal-trigger" href="#modalAgregarUsuario" ><i class="material-icons red-text">accessibility</i></a>':
     // value.usuario;

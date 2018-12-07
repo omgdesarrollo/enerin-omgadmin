@@ -14,8 +14,9 @@
 
 <html>
     <head>
-        <title>ADMIN</title>
+        <title style="color:red">ADMIN</title>
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+        <link rel="shortcut icon" href="../../images/base/enerinLogo.png">
 
         <script src="../../js/jquery.min.js" type="text/javascript"></script>
 
@@ -178,7 +179,7 @@
                 <!-- </a> -->
                         <ul id="nav-mobile" class="right">
                             <li>
-                                <a id="cerrarSesion" class="waves-effect waves-omg flow-text tooltipped" data-tooltip="USUARIO" href="#!" ><i class="material-icons blue-text">account_box</i></a>
+                                <a id="infoUSuarioSesion" class="waves-effect waves-omg flow-text tooltipped" data-tooltip="USUARIO" href="#!" ><i class="material-icons blue-text">account_box</i></a>
                             </li>
                             <li>
                                 <a id="cerrarSesion" class="waves-effect waves-omg flow-text tooltipped" data-tooltip="SALIR" href="#!" ><i class="material-icons blue-text">exit_to_app</i></a>
@@ -270,6 +271,10 @@
             $("#fnViewMejoras").on("click",(obj)=>{
                 cambioMenu(obj);
                 abrirMejoras();
+            });
+
+            $("#infoUSuarioSesion").on("click",()=>{
+                abrirInfoUSuario();
             });
         });
 
