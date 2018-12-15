@@ -43,6 +43,10 @@
                 padding:0px !important;
                 text-align:center;
             }
+            .jsgrid-cell>select
+            {
+                display:initial !important;
+            }
         </style>
     </head>
     <body>
@@ -243,21 +247,18 @@
                 {
                         fecha=value;
                 }
-                $("#editarFechaGrid_CreacionInput")[0]["dataCustom"] = data;
-                this._inputDate = $("<input>").attr({id:"grid_fechaCreacion_"+data.PK,onClick:"gridFechaEditarProyecto(this)",type:"text",value:fecha,style:"margin:-5px;width:145px"});
-                // grid_fechaActualizacion_
-                // $('.datepicker').datepicker({format:"yyyy-mm-dd"});
+                this._inputDate = $("<input>").attr({id:"grid_fechaCreacion",onClick:"gridFechaEditarProyecto(this)",type:"text",value:fecha,style:"margin:-5px;width:145px"});
                 return this._inputDate;
             },
             insertValue: function()
             {},
-            editValue: function(val)
+            editValue: function()
             {
-                value = this._inputDate[0].value;
+                value = $(this._inputDate)[0]["dateFecha"];
                 if(value=="")
                         return "0000-00-00";
                 else
-                        return $(this._inputDate).val();
+                        return value;
             }
         });
 
@@ -281,7 +282,6 @@
             {},
             editTemplate: function(value,data)
             {
-                // console.log("AA",data);
                 let time = data.actualizacion.split(" ");
                 fecha="0000-00-00 00:00:00";
                 if(value!=fecha)
@@ -407,10 +407,10 @@
                 $("#editarHora_horaInput").click();//auto click
             });
 
-            $("#editarFechaGrid_CreacionInput").change(()=>{//funcion que al cambiar el valor del campo intermediario para el valor de fecha creacion del grid
-                let data = $("#editarFechaGrid_CreacionInput")[0]["dataCustom"];
-                $("#grid_fechaCreacion_"+data.PK).val( $("#editarFechaGrid_CreacionInput").val() );
-
+            $("#editarFechaGrid_CreacionInput").change(()=>{
+                let obj = $("#editarFechaGrid_CreacionInput")[0]["elementDestinoDate"];
+                $(obj)[0]["dateFecha"] = $("#editarFechaGrid_CreacionInput").val();
+                $(obj).val( $("#editarFechaGrid_CreacionInput").val() );
             });
 
             // $("#editarFecha_AceptarButton").on("click",()=>{

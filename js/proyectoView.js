@@ -556,6 +556,7 @@ saveUpdateToDatabase = (args)=>
                 columnas[index] = value;
         }
     });
+    console.log(columnas);
     if(Object.keys(columnas).length != 0)
     {
         columnas["PK"] = PK;
@@ -612,7 +613,7 @@ editarFechaCheck = ()=>
         if(value.val().trim()=="")
         {
             bandera = 1;
-            mensajeError += "*"+value[0].labels[0].innerHTML+"\n";
+            mensajeError += "*"+value[0].labels[0].innerHTML+"<br>";
         }
     });
 
@@ -669,7 +670,9 @@ mandarDatosFechaActualizacion = ()=>
 
 gridFechaEditarProyecto = (obj)=>
 {
+    $("#editarFechaGrid_CreacionInput")[0]["elementDestinoDate"] = obj;
     $("#editarFechaGrid_CreacionInput").click();
+    // console.log($('.datepicker'));
     // console.log( $("#editarFechaGrid_CreacionInput") );
     // let btnDone = $("#editarFechaGrid_CreacionInput")[0]["M_Datepicker"]["doneBtn"];
     // console.log( $("#editarFechaGrid_CreacionInput")[0]["M_Datepicker"]["doneBtn"] );
